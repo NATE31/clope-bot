@@ -49,6 +49,11 @@ app.post('/webhook/', function (req, res) {
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
     }
+    if (event.message && event.message.attachments[0].type == 'location'){
+        var lat = event.message.attachments[0].payload.coordinates.lat;
+        var long = event.message.attachments[0].payload.coordinates.long;
+        sendTextMessage(sender, lat+','+long, token);
+      }
   }
   res.sendStatus(200)
 })
