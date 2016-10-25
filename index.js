@@ -45,7 +45,7 @@ app.post('/webhook/', function (req, res) {
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆")
     }
     if (event.postback && event.message.attachments[0].payload.coordinates) {
-      let text = JSON.stringify(event.postback)
+      let text = JSON.stringify(event.postback && event.message.attachments[0].payload.coordinates)
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
     }
