@@ -1,6 +1,6 @@
 {
-    "appSecret": "f23a2f691797851a473d17c19199cf7d",
-    "pageAccessToken": "EAAKOAD5oGbwBAHV2oGZA5ZC5dxVIMTZAGGlE2DYlsVNx4GlvWX9qBTyEl8FkZAbwoKvvGql3o0KxFZBslLp5oZCbHZBBLMIsprtffqVNxiZBueM62Qy8p5F5JyCn1bPQxoyyMdBMh9SEjyZBxSSZB3IxroCRo06395IFIkcpLXbrZB1AgZDZD",
+    "appSecret": "b2f60a515d4252af49d030abbc95cb39",
+    "pageAccessToken": "EAAPl1gRvsSYBAN7x0XSOEoWXXbmlrkuzc8nIB5XcjMSK1ZA5ZBA5GdXiPx1XXuITdjW6vkjZBMWOSsmO0udzfsmJ0kGwDp70fjmJZBbdROnQNZAe2t1UJOSV1KIqwZAMmeW8JjCK0pINA6kQWQULcorPTGLFdbs59QbnSGPpHY9AZDZD",
     "validationToken": "1234AZERTY",
     "serverURL": "https://1a4f9a82.ngrok.io/messenger-platform-samples/node/index.js"
 }
