@@ -93,10 +93,8 @@ function sendGenericMessage(sender) {
             "title": "Postback",
             "payload": "Payload for first element in a generic bubble",
           },{
-            "type": "location",
-            "title": "location",
-            "payload": "Payload for first element in a generic bubble",
-          }],
+            "type": "element_share",
+            }],
         }, ]
       }
     }
