@@ -34,12 +34,12 @@ app.post('/webhook/', function (req, res) {
     let sender = event.sender.id
     if (event.message && event.message.text) {
       let text = event.message.text
-      if (text === 'Menu') {
-        sendGenericMessage(sender)
-        continue
-      },
       if (text === 'Clope') {
         sendQuickReply(sender)
+        continue
+      }
+      if (text === 'Menu') {
+        sendGenericMessage(sender)
         continue
       }
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆")
@@ -95,7 +95,7 @@ function sendGenericMessage(sender) {
             "webview_height_ratio": "compact"
           }, {
             "type": "postback",
-            "title": "Clope",
+            "title": "localisation",
             "payload": "Payload for first element in a generic bubble",
           },{
             "type": "element_share",
