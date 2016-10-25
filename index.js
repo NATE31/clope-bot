@@ -95,7 +95,7 @@ function sendGenericMessage(sender) {
             "webview_height_ratio": "compact"
           }, {
             "type": "postback",
-            "title": "localisation",
+            "title": "Clope",
             "payload": "Payload for first element in a generic bubble",
           },{
             "type": "element_share",
