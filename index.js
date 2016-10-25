@@ -34,7 +34,7 @@ app.post('/webhook/', function (req, res) {
     let sender = event.sender.id
     if (event.message && event.message.text) {
       let text = event.message.text
-      if (text === 'Generic') {
+      if (text === 'Clope') {
         sendGenericMessage(sender)
         continue
       }
@@ -81,16 +81,20 @@ function sendGenericMessage(sender) {
       "payload": {
         "template_type": "generic",
         "elements": [{
-          "title": "First card",
-          "subtitle": "Element #1 of an hscroll",
-          "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+          "title": "Tabacouvert.fr",
+          "subtitle": "nous avons trouvé un tabac proche de toi ",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
             "url": "https://www.messenger.com",
-            "title": "web url"
+            "title": "charger la carte"
           }, {
             "type": "postback",
             "title": "Postback",
+            "payload": "Payload for first element in a generic bubble",
+          },{
+            "type": "location",
+            "title": "location",
             "payload": "Payload for first element in a generic bubble",
           }],
         }, ]
