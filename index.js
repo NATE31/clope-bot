@@ -38,6 +38,10 @@ app.post('/webhook/', function (req, res) {
 				sendGenericMessage(sender)
 				continue
 			}
+      if (text === 'clope') {
+        sendQuickReply(sender)
+        continue
+      }
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 		}
 		if (event.postback) {
@@ -53,10 +57,6 @@ app.post('/webhook/', function (req, res) {
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
 const token = "EAAPl1gRvsSYBABEmk5BKObmZC2AXdCbexRKZBFj58towIH1GT89kZAjYATnVlRkjaqrfQuZBQiXl8kWGrNoZCWsOHbkta1jIfnA9BnbSlC3bRykD2GtOjLTorjZBQ7hg5kuY9IpWLRcvDPG5ZAetfbZCgimvTbghtkuIWic2W7BbAwZDZD"
-
-
-
-
 
 function sendTextMessage(sender, text) {
 	let messageData = { text:text }
@@ -98,8 +98,8 @@ function sendGenericMessage(sender) {
 						"payload": "Payload for first element in a generic bubble",
 					}],
 				}, {
-					"title": "Données",
-					"subtitle": "données publiques",
+					"title": "Second card",
+					"subtitle": "Element #2 of an hscroll",
 					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
 					"buttons": [{
 						"type": "postback",
@@ -126,56 +126,6 @@ function sendGenericMessage(sender) {
 		}
 	})
 }
-
-function sendQuickReply(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "YO",
-          "subtitle": "clique sur le lien pour chargé la page",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "'http://localhost/tabacMap/&lat=' + lat + '&lon=' + lon + '&zoom=10'  ",
-            "title": "La carte"
-          }, {
-            "type": "postback",
-            "title": "Postback",
-            "payload": "Payload for first element in a generic bubble",
-          }],
-        }, {
-          "title": "YO2",
-          "subtitle": "données publiques",
-          "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-          "buttons": [{
-            "type": "postback",
-            "title": "Postback",
-            "payload": "Payload for second element in a generic bubble",
-          }],
-        }]
-      }
-    }
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
 
 // spin spin sugar
 app.listen(app.get('port'), function() {
