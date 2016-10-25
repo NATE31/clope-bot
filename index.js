@@ -38,7 +38,7 @@ app.post('/webhook/', function (req, res) {
         sendQuickReply(sender)
         continue
       }
-      sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆")
     }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
@@ -120,9 +120,9 @@ function sendGenericMessage(sender) {
 function sendQuickReply(sender) {
   let messageData = {
     "text": "test géoloc",
-    "quick_replies": {
+    "quick_replies": [{
         "content_type": "location",
-      },
+      }]
     }
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
