@@ -35,7 +35,7 @@ app.post('/webhook/', function (req, res) {
     if (event.message && event.message.text) {
       let text = event.message.text
       if (text === 'Clope') {
-        sendGenericMessage(sender)
+        sendQuickReply(sender)
         continue
       }
       sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
@@ -91,7 +91,7 @@ function sendGenericMessage(sender) {
             "webview_height_ratio": "compact"
           }, {
             "type": "postback",
-            "title": "Postback",
+            "title": "localisation",
             "payload": "Payload for first element in a generic bubble",
           },{
             "type": "element_share",
@@ -116,6 +116,33 @@ function sendGenericMessage(sender) {
     }
   })
 }
+
+function sendQuickReply(sender) {
+  let messageData = {
+    "text": "test géoloc",
+    "quick_replies": {
+        "content_type": "location",
+      }
+    }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+
+
 
 // spin spin sugar
 app.listen(app.get('port'), function() {
