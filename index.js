@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-  res.send('hello world i am a secret bot')
+  res.send('tabacbot')
 })
 
 // for facebook verification
@@ -49,11 +49,11 @@ app.post('/webhook/', function (req, res) {
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
     }
-    if (event.message.quick_reply) {
-      let quickReply = JSON.stringify(event.message.quick_reply)
-      sendTextMessage(sender, "location received: "+quickReply.substring(0, 1000), token)
-      continue
-    }
+   else if (messageAttachments) {
+
+              console.log(messageAttachments[0].payload.coordinates.lat); //gives you lat
+              console.log(messageAttachments[0].payload.coordinates.long); // gives you long
+           }
     
   }
   res.sendStatus(200)
