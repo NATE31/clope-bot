@@ -87,7 +87,7 @@ function sendGenericMessage(sender) {
           "buttons": [{
             "type": "web_url",
             "url": "https://www.messenger.com",
-            "title": "charger la carte 🚬🚬",
+            "title": "🚬charger la carte 🚬",
             "webview_height_ratio": "compact"
           }, {
             "type": "postback",
@@ -122,7 +122,7 @@ function sendQuickReply(sender) {
     "text": "test géoloc",
     "quick_replies": {
         "content_type": "location",
-      }
+      },
     }
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
