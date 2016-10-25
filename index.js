@@ -44,10 +44,9 @@ app.post('/webhook/', function (req, res) {
       }
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆")
     }
-    if (event.message.attachments[0].type == 'location') {
-      let lat = event.message.attachments[0].payload.coordinates.lat;
-      let long = event.message.attachments[0].payload.coordinates.long;
-        sendTextMessage(sender, lat + ',' + long + 'GEOLOCATION', token)
+    if (event.postback) {
+      let text = JSON.stringify(event.postback)
+      sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
     }
   }
@@ -124,7 +123,7 @@ function sendGenericMessage(sender) {
 
 function sendQuickReply(sender) {
   let messageData = {
-    "text": "Merci d'envoyer ta géolocalisation pour que je te propose les tabacs 0 proximité",
+    "text": "Merci d'envoyer ta géolocalisation pour que je te propose les tabacs à proximité",
     "quick_replies": [{
         "content_type": "location",
       }]
