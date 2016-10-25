@@ -50,9 +50,9 @@ app.post('/webhook/', function (req, res) {
       continue
     }
     if (event.message.attachments[0].type == 'location'){
-        let lat = event.message.attachments[0].payload.coordinates.lat
-        let long = event.message.attachments[0].payload.coordinates.long
-        sendTextMessage(sender, lat+','+long, token)
+        let lat = JSON.stringify(event.message.attachments[0].payload.coordinates.lat)
+        let long = JSON.stringify(event.message.attachments[0].payload.coordinates.long)
+        sendTextMessage(sender, lat.substring(0, 200)+','+long.substring(0, 200), token)
         continue
       }
   }
