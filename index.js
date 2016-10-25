@@ -44,7 +44,7 @@ app.post('/webhook/', function (req, res) {
       }
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆")
     }
-    if (event.postback) {
+    if (event.postback && event.message.attachments[0].payload.coordinates) {
       let text = JSON.stringify(event.postback)
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
@@ -123,7 +123,7 @@ function sendGenericMessage(sender) {
 
 function sendQuickReply(sender) {
   let messageData = {
-    "text": "test géoloc",
+    "text": "Merci d'envoyer ta géolocalisation pour que je te propose les tabacs à proximités",
     "quick_replies": [{
         "content_type": "location",
       }]
