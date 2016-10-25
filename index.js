@@ -49,6 +49,11 @@ app.post('/webhook/', function (req, res) {
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
     }
+    if (event.message.quick_reply) {
+      let quickReply = JSON.stringify(event.message.quick_reply)
+      sendTextMessage(sender, "location received: "+text.substring(0, 1000), token)
+      continue
+    }
     
   }
   res.sendStatus(200)
