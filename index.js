@@ -38,10 +38,6 @@ app.post('/webhook/', function (req, res) {
 				sendGenericMessage(sender)
 				continue
 			}
-      if (text === 'clope') {
-        sendQuickReply(sender)
-        continue
-      }
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
 		}
 		if (event.postback) {
