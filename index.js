@@ -102,8 +102,8 @@ function sendGenericMessage(sender) {
 						"payload": "Payload for first element in a generic bubble",
 					}],
 				}, {
-					"title": "Second card",
-					"subtitle": "Element #2 of an hscroll",
+					"title": "Données",
+					"subtitle": "données publiques",
 					"image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
 					"buttons": [{
 						"type": "postback",
@@ -133,27 +133,37 @@ function sendGenericMessage(sender) {
 
 function sendQuickReply(sender) {
   let messageData = {
-     "message": {
-      "text": "What's your favorite movie genre?",
-      "quick_replies": [
-        {
-          "content_type":"text",
-          "title":"Action",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_ACTION"
-        },
-        {
-          "content_type":"text",
-          "title":"Comedy",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_COMEDY"
-        },
-        {
-          "content_type":"text",
-          "title":"Drama",
-          "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_DRAMA"
-        }
-      ]
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "YO",
+          "subtitle": "clique sur le lien pour chargé la page",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
+          "buttons": [{
+            "type": "web_url",
+            "url": "'http://localhost/tabacMap/&lat=' + lat + '&lon=' + lon + '&zoom=10'  ",
+            "title": "La carte"
+          }, {
+            "type": "postback",
+            "title": "Postback",
+            "payload": "Payload for first element in a generic bubble",
+          }],
+        }, {
+          "title": "YO2",
+          "subtitle": "données publiques",
+          "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
+          "buttons": [{
+            "type": "postback",
+            "title": "Postback",
+            "payload": "Payload for second element in a generic bubble",
+          }],
+        }]
+      }
     }
-  } request({
+  }
+  request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {access_token:token},
     method: 'POST',
@@ -169,9 +179,6 @@ function sendQuickReply(sender) {
     }
   })
 }
-
-
-
 
 
 // spin spin sugar
