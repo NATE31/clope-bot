@@ -87,7 +87,8 @@ function sendGenericMessage(sender) {
           "buttons": [{
             "type": "web_url",
             "url": "https://www.messenger.com",
-            "title": "charger la carte"
+            "title": "charger la carte 🚬🚬"
+            "webview_height_ratio": "compact"
           }, {
             "type": "postback",
             "title": "Postback",
