@@ -42,11 +42,13 @@ app.post('/webhook/', function (req, res) {
         sendGenericMessage(sender)
         continue
       }
-      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer ")
+      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + ". Tapes Menu pour commencer ")
     }
-    if (event.postback) {
-      let text = JSON.stringify(event.postback)
-      sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+    else if (event.postback && event.postback.payload) {
+     let payload = event.postback.payload
+     lat = event.message.attachments[0].payload.coordinates.lat
+     lng = event.message.attachments[0].payload.coordinates.long
+     sendTextMessage(sender, lat + "," + long)
       continue
     }
   }
