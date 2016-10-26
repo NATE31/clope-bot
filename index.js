@@ -46,11 +46,11 @@ app.post('/webhook/', function (req, res) {
     }
     else if (event.postback && event.postback.payload) {
      let payload = event.postback.payload
-     lat = event.message.attachments[0].payload.coordinates.lat
-     lng = event.message.attachments[0].payload.coordinates.long
-     sendTextMessage(sender, lat + "," + long)
+     let lat = event.message.attachments[0].payload.coordinates.lat
+     let lng = event.message.attachments[0].payload.coordinates.long
       continue
     }
+    sendTextMessage(sender, lat + "," + long)
   }
   res.sendStatus(200)
 })
