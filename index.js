@@ -28,7 +28,6 @@ app.get('/webhook/', function (req, res) {
 
 // to post data
 app.post('/webhook/', function (req, res) {
-  console.log(data)
   let messaging_events = req.body.entry[0].messaging
   for (let i = 0; i < messaging_events.length; i++) {
     let event = req.body.entry[0].messaging[i]
@@ -43,14 +42,13 @@ app.post('/webhook/', function (req, res) {
         sendGenericMessage(sender)
         continue
       }
-      sendTextMessage(sender, "😆 Dsl je ne comprends pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer ")
-     }
+      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer ")
+    }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
     }
-
     
   }
   res.sendStatus(200)
