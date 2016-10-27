@@ -43,13 +43,19 @@ app.post('/webhook/', function (req, res) {
         sendGenericMessage(sender)
         continue
       }
-      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer ")
-    }
+      sendTextMessage(sender, "😆 Dsl je ne comprends pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer ")
+       }
     if (event.postback) {
       let text = JSON.stringify(event.postback)
       sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
-    }
+      }
+      if (event.postback.quick_reply) {
+      let quickReplyPayload = event.postback.quick_reply.payload
+      sendTextMessage(sender, "quick reply Tapped", token)
+      continue
+      }
+
     
   }
   res.sendStatus(200)
