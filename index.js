@@ -50,7 +50,7 @@ app.post('/webhook/', function (req, res) {
       continue
       }
       if (event.postback.quick_reply) {
-      let quickReplyPayload = event.postback.quick_reply.payload;
+      var quickReplyPayload = event.postback.quick_reply.payload;
       sendTextMessage(sender, "quick reply Tapped", token);
       }
 
