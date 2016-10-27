@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-  res.send('hello world i am a secret bot')
+  res.send('je suis Clope Bot')
 })
 
 // for facebook verification
@@ -27,37 +27,42 @@ app.get('/webhook/', function (req, res) {
 })
 
 // to post data
-app.post('/webhook/', function (req, res) {
-  let messaging_events = req.body.entry[0].messaging
-  for (let i = 0; i < messaging_events.length; i++) {
-    let event = req.body.entry[0].messaging[i]
-    let sender = event.sender.id
-    if (event.message && event.message.text) {
-      let text = event.message.text
-      if (text === 'Clope') {
-        sendQuickReply(sender)
-        continue
-      }
-      if (text === 'Menu') {
-        sendGenericMessage(sender)
-        continue
-      }
-      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer ")
-    }
-    if (event.postback) {
-      let text = JSON.stringify(event.postback)
-      sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-      continue
-    }
-    if (event.postback.payload) {
-      var payload = event.postback.payload;
-      sendPayloadMessage(sender, "payload received:", token)
-      continue
-    }
-  }
-  res.sendStatus(200)
-})
+app.post('/webhook', function (req, res) {
+    var events = req.body.entry[0].messaging;
+    for (i = 0; i < events.length; i++) {
+        var event = events[i];
+        if (event.message && event.message.text) {
+    sendMessage(event.sender.id, {text: "Hi. Send your location"}); // event.message.text
+        }
+  else if (event.message && event.message.attachments && event.message.attachments[0] && event.message.attachments[0].payload && event.message.attachments[0].payload.coordinates) {
+    urlBase = "http://api.wunderground.com/api/57fd25cc02e9da86/conditions/forecast/alert/q/"
+    lat = event.message.attachments[0].payload.coordinates.lat
+    lon = event.message.attachments[0].payload.coordinates.long
+    totUrl = urlBase + String(lat) + "," + String(lon) + ".json"
 
+//                sendMessage(event.sender.id, {text: totUrl});
+
+    request({
+        url: totUrl,
+        json: true
+    }, function (error, response, body) {
+
+        if (!error && response.statusCode === 200) {
+      var rain = body.current_observation.precip_1hr_metric
+      if (rain > 0) {
+        sendMessage(event.sender.id, {text: "It's gonna rain. Grab an umbrella!"});
+      }
+      else {
+        sendMessage(event.sender.id, {text: "No rain ahead!"});
+      }
+        }
+    })
+  } 
+  events = []
+    }
+  req.body.entry[0].messaging = []
+    res.sendStatus(200);
+});
 
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
@@ -83,31 +88,6 @@ function sendTextMessage(sender, text) {
   })
 }
 
-
-
-function sendPayloadMessage(sender, text) {
-  let messageData = { text:text }
-  
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-
-
-
 function sendGenericMessage(sender) {
   let messageData = {
     "attachment": {
@@ -120,7 +100,7 @@ function sendGenericMessage(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://www.messenger.com",
+            "url": "https://www.localhost.com/?lat=" + lat + "&lon=" + long,
             "title": "🚬charger la carte 🚬",
             "webview_height_ratio": "compact"
           }, {
