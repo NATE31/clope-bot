@@ -44,12 +44,14 @@ app.post('/webhook/', function (req, res) {
       }
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
     }
-    if (event.postback) {
-      let text = JSON.stringify(event.postback)
-      sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+    if (event.message.attachments) { //ajouter ici la possibilité de comprendre les postbacks géolocalisé #fail
+      lat = event.message.attachments[0].payload.coordinates.lat;
+      long = event.message.attachments[0].payload.coordinates.long;
+      sendTextMessage(sender, "Postback received: "+ lat + long , token)
       continue
     }
-    
+
+
   }
   res.sendStatus(200)
 })
@@ -61,7 +63,7 @@ const token = "EAAPl1gRvsSYBABEmk5BKObmZC2AXdCbexRKZBFj58towIH1GT89kZAjYATnVlRkj
 
 function sendTextMessage(sender, text) {
   let messageData = { text:text }
-  
+
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {access_token:token},
