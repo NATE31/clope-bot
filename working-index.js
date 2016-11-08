@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 
-app.set('port', (process.env.PORT || 8000))
+app.set('port', (process.env.PORT || 80))
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}))
@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-  res.send('je suis RobotClop ')
+  res.send('je suis Clope Bot')
 })
 
 // for facebook verification
@@ -44,18 +44,13 @@ app.post('/webhook/', function (req, res) {
       }
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
     }
-    console.log('Event: ', event);
-    console.log('Event.message : ', event.message);
-    console.log('Event.attachments : ', event.message.attachments);
-    console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
-    console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
-
-   if (event.message.attachments[0].payload) { //ajouter ici la possibilité de comprendre les postbacks géolocalisé #fail
-      var lat = JSON.stringify(event.attachments[0].payload.coordinates.lat);
-      var long =  JSON.stringify(event.attachments[0].payload.coordinates.long);
-      sendTextMessage(sender, "position received: " + lat + long)
+    if (event.postback) { //ajouter ici la possibilité de comprendre les postbacks géolocalisé #fail 
+      let text = JSON.stringify(event.postback)
+      sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
       continue
-}
+    }
+
+
   }
   res.sendStatus(200)
 })
