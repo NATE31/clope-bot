@@ -45,12 +45,11 @@ app.post('/webhook/', function (req, res) {
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
     }
     if (event.message.attachments) { //ajouter ici la possibilité de comprendre les postbacks géolocalisé #fail
-      lat = event.message.attachments[0].payload.coordinates.lat;
-      long = event.message.attachments[0].payload.coordinates.long;
-      sendTextMessage(sender, "Postback received: "+ lat + long , token)
+      lat = event.message.attachments[0].payload.coordinates.lat
+      long = event.message.attachments[0].payload.coordinates.long
+      sendTextMessage(sender, "position received: "+ lat + long , token)
       continue
     }
-
 
   }
   res.sendStatus(200)
