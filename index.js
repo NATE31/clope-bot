@@ -64,6 +64,10 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyAction(sender)
         continue
       }
+      if (text === 'menu') {
+        sendQuickReplyAction(sender)
+        continue
+      }
       if (text === '🖥 Vesion Web') {
         sendGenericVersionWeb(sender)
         continue
