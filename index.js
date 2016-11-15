@@ -7,11 +7,13 @@ const app = express()
 
 app.set('port', (process.env.PORT || 8000))
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
 
 // parse application/json
 app.use(bodyParser.json())
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended: false}))
+
 
 // index
 app.get('/', function (req, res) {
@@ -34,28 +36,71 @@ app.post('/webhook/', function (req, res) {
     let sender = event.sender.id
     if (event.message && event.message.text) {
       let text = event.message.text
-      if (text === 'Clope') {
-        sendQuickReply(sender)
+      if (text === 'Clope🚬') {
+        sendQuickReplyLoc(sender)
+        continue
+      }
+      if (text === '🚬') {
+        sendQuickReplyLoc(sender)
+        continue
+      }
+      if (text === 'Bonjour') {
+        sendQuickReplyHello(sender)
+        continue
+      }
+      if (text === 'Hello') {
+        sendQuickReplyHello(sender)
+        continue
+      }
+      if (text === '💬 Partager') {
+        share(sender)
+        continue
+      }
+      if (text === '🚑 Arréter de fumer') {
+        sendGenericStop(sender)
         continue
       }
       if (text === 'Menu') {
-        sendGenericMessage(sender)
+        sendQuickReplyAction(sender)
+        continue
+      }
+      if (text === '🖥 Vesion Web') {
+        sendGenericVersionWeb(sender)
+        continue
+      }
+
+      if (text === 'Merci') {
+          sendTextMessage(sender, "De rien ! Reviens me voir quand tu veux, mais ne fume pas trop quand même 😆 ")
         continue
       }
       sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
     }
-    console.log('Event: ', event);
-    console.log('Event.message : ', event.message);
-    console.log('Event.attachments : ', event.message.attachments);
-    console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
-    console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
+    if (event.message && event.message.attachments && event.message.attachments[0].payload) {
+        if (!event.message.attachments[0].payload.coordinates) continue;
+        let long = event.message.attachments[0].payload.coordinates.long;
+        let lat = event.message.attachments[0].payload.coordinates.lat;
+        sendTextMessage(sender, "Super j'ai bien reçu ta géolocalisation clic sur le lien pour charger la map des tabac a proximité http://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14 ,parfois la map est un peu décalé 😝")
+        console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
+        console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
+      }
+    //console.log('Event: ', event);
+    //console.log('Event.message : ', event.message);
+    //console.log('Event.attachments : ', JSON.stringify(event.message.attachments));
+    //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
+    //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
 
-   if (event.message.attachments[0].payload) { //ajouter ici la possibilité de comprendre les postbacks géolocalisé #fail
-      var lat = JSON.stringify(event.attachments[0].payload.coordinates.lat);
-      var long =  JSON.stringify(event.attachments[0].payload.coordinates.long);
-      sendTextMessage(sender, "position received: " + lat + long)
-      continue
-}
+     //if (event.message && event.message.attachments && event.message.attachments[0] && event.message.attachments[0].payload && event.message.attachments[0].payload.coordinates) {
+    	//let	latitutde = JSON.stringify(event.message.attachments[0].payload.coordinates.lat);
+    //	let	longitude = JSON.stringify(event.message.attachments[0].payload.coordinates.long);
+      //  console.log( 'location : ',latitutde + ',' +longitude);
+    		//totUrl = urlBase + String(lat) + "," + String(lon) + ".json"
+
+  //if (event.message) {
+  //lat = JSON.stringify(event.attachments[0].payload.coordinates.lat)
+  //  console.log(lat)
+    //sendTextMessage(sender, "position received: " +  + JSON.stringify(event.attachments[0].payload.coordinates.long))
+    //continue
+    //}
   }
   res.sendStatus(200)
 })
@@ -63,7 +108,7 @@ app.post('/webhook/', function (req, res) {
 
 // recommended to inject access tokens as environmental variables, e.g.
 // const token = process.env.PAGE_ACCESS_TOKEN
-const token = "EAAPl1gRvsSYBABEmk5BKObmZC2AXdCbexRKZBFj58towIH1GT89kZAjYATnVlRkjaqrfQuZBQiXl8kWGrNoZCWsOHbkta1jIfnA9BnbSlC3bRykD2GtOjLTorjZBQ7hg5kuY9IpWLRcvDPG5ZAetfbZCgimvTbghtkuIWic2W7BbAwZDZD"
+const token = "EAAPl1gRvsSYBAHADDXnt0q25LaFuahVcXdCESjxwQEXbJWZBTeIaiZBH6IfSzeDpv1vKrjoaY9hSZBn3IvkVyHQg7tc2KBqjrIF45MLRJ35K3JwBC89j4QIGlThrWR77jZAZBEDKZCgbaPlm8AYAwcnqPkOysDrDUZC8ZAZBFZBs845wZDZD"
 
 function sendTextMessage(sender, text) {
   let messageData = { text:text }
@@ -93,13 +138,12 @@ function sendGenericMessage(sender) {
         "template_type": "generic",
         "elements": [{
           "title": "Tabacouvert.fr",
-          "subtitle": "nous avons trouvé un tabac proche de toi ",
+          "subtitle": "la vesion web de RoboClope",
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://www.messenger.com",
+            "url": "https://www.tabacouvert.fr",
             "title": "🚬charger la carte 🚬",
-            "webview_height_ratio": "compact"
           }, {
             "type": "postback",
             "title": "Clope",
@@ -127,14 +171,224 @@ function sendGenericMessage(sender) {
     }
   })
 }
-
-function sendQuickReply(sender) {
+function sendGenericVersionWeb(sender) {
   let messageData = {
-    "text": "Merci d'envoyer ta géolocalisation pour que je te propose les tabacs à proximité",
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "Tabacouvert.fr",
+          "subtitle": "la vesion web de RoboClope",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://www.tabacouvert.fr",
+            "title": "Allé sur le site",
+          },
+          {
+            "type": "element_share",
+            }],
+        }, ]
+      }
+    }
+  }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+
+function sendGenericStop(sender) {
+  let messageData = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "Arrétez de fumer 😉",
+          "subtitle": " 📱 La nouvelle app de l'assurance maladie",
+          "image_url": "http://a2.mzstatic.com/eu/r30/Purple62/v4/aa/76/f0/aa76f0b1-d1ba-f9ce-fa03-c880d6e85c77/screen696x696.jpeg",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://appsto.re/fr/xhu2db.i",
+            "title": "Avec une app 📱",
+          }
+          //,{
+          //"type":"phone_number",
+          //"title":"Ou Par téléphone ☎️",
+          //"payload":"+33649855544"
+       //},
+          {
+            "type": "element_share",
+            }],
+        }, ]
+      }
+    }
+  }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+
+
+
+function share(sender) {
+  let messageData = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "RobotClope 🤖🚬",
+          "subtitle": "Merci de partager ❤❤ RobotClope le ChatBot qui te trouve des clopes 🚬🚬",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://www.cuireduriz.fr",
+            "title": "RobotClope 🤖🚬",
+          },
+          {
+            "type": "element_share",
+            }],
+        }, ]
+      }
+    }
+  }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+
+function sendQuickReplyLoc(sender) {
+  let messageData = {
+    "text": "Haha, je t'ai eu !! Il me faut dans tout les cas ta géolocalisation 📍📍 pour que je te propose les tabacs à proximité",
     "quick_replies": [{
         "content_type": "location",
       }]
     }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+function sendQuickReplyHello(sender) {
+  let messageData = {
+    "text":"Bonjour je suis RobotClop,\n un petit 🤖 qui t'aide a trouver des 🚬🚬. \n \n  Pour commencer il suffit de m'envoyer ta géolocalisation. 📍📍 \n \n A tout moment tu peux tapper Menu pour retrouvez toutes les actions. 👍 ",
+    "quick_replies":[
+      {
+        "content_type":"text",
+        "title":"Menu",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"location",
+        "title":"position",
+      }
+    ]
+  }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+function sendQuickReplyAction(sender) {
+  let messageData = {
+    "text":"Choisis une action",
+    "quick_replies":[
+      {
+        "content_type":"location",
+        "title":"position",
+      },
+      {
+        "content_type":"text",
+        "title":"🖥 Vesion Web",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
+        "title":"💬 Partager",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
+        "title":"🚑 Arréter de fumer",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
+        "title":"🤔 Faq",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
+        "title":"🤑 Soutenir",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      }
+    ]
+  }
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {access_token:token},
