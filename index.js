@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 
-app.set('port', (process.env.PORT || 80))
+app.set('port', (process.env.PORT || 8000))
 
 
 // parse application/json
@@ -22,7 +22,7 @@ app.get('/', function (req, res) {
 
 // for facebook verification
 app.get('/webhook/', function (req, res) {
-  if (req.query['hub.verify_token'] === '123456789loom72') {
+  if (req.query['hub.verify_token'] === '123456789') {
     res.send(req.query['hub.challenge'])
   }
   res.send('Error, wrong token')
@@ -79,7 +79,7 @@ app.post('/webhook/', function (req, res) {
         if (!event.message.attachments[0].payload.coordinates) continue;
         let long = event.message.attachments[0].payload.coordinates.long;
         let lat = event.message.attachments[0].payload.coordinates.lat;
-        sendTextMessage(sender, "Super j'ai bien reçu ta géolocalisation clic sur le lien pour charger la map des tabac a proximité http://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14 ,parfois la map est un peu décalé 😝")
+        sendTextMessage(sender, "http://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=15")
         console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
         console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
       }
@@ -142,8 +142,9 @@ function sendGenericMessage(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://www.tabacouvert.fr",
+            "url": "https://www.cuireduriz.fr",
             "title": "🚬charger la carte 🚬",
+            "webview_height_ratio": "compact"
           }, {
             "type": "postback",
             "title": "Clope",
@@ -183,8 +184,13 @@ function sendGenericVersionWeb(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://www.tabacouvert.fr",
+            "url": "https://www.cuireduriz.fr",
             "title": "Allé sur le site",
+          },
+          {
+            "type": "postback",
+            "title":"Menu",
+            "payload":"DEVELOPER_DEFINED_PAYLOAD"
           },
           {
             "type": "element_share",
@@ -225,12 +231,11 @@ function sendGenericStop(sender) {
             "type": "web_url",
             "url": "https://appsto.re/fr/xhu2db.i",
             "title": "Avec une app 📱",
-          }
-          //,{
-          //"type":"phone_number",
-          //"title":"Ou Par téléphone ☎️",
-          //"payload":"+33649855544"
-       //},
+          },{
+          "type":"phone_number",
+          "title":"Ou Par téléphone ☎️",
+          "payload":"+33649855544"
+       },
           {
             "type": "element_share",
             }],
