@@ -184,7 +184,7 @@ function sendGenericVersionWeb(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "hhttp://www.tabacouvert.fr",
+            "url": "http://www.tabacouvert.fr",
             "title": "Allé sur le site",
           },
           {
@@ -226,7 +226,11 @@ function sendGenericStop(sender) {
             "type": "web_url",
             "url": "https://appsto.re/fr/xhu2db.i",
             "title": "Avec une app 📱",
-          },
+          },{
+          "type":"phone_number",
+          "title":"Ou Par téléphone ☎️",
+          "payload":"+33649855544"
+       },
           {
             "type": "element_share",
             }],
