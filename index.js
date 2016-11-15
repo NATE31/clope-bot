@@ -270,7 +270,7 @@ function share(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://www.cuireduriz.fr",
+            "url": "https://m.me/960621237397515",
             "title": "RobotClope 🤖🚬",
           },
           {
