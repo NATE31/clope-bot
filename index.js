@@ -345,7 +345,7 @@ function sendQuickReplyLoc(sender) {
 
 function sendQuickReplyHello(sender) {
   let messageData = {
-    "text":"Bonjour je suis RobotClop,\n un petit 🤖 qui t'aide a trouver des 🚬🚬. \n \n  Pour commencer il suffit de m'envoyer ta géolocalisation. 📍📍 \n \n A tout moment tu peux tapper Menu pour retrouvez toutes les actions. 👍 ",
+    "text":"Bonjour je suis RobotClop,\n un petit 🤖 qui t'aide a trouver des 🚬🚬. \n \n  Pour commencer il suffit de m'envoyer ta géolocalisation. 📍📍 \n \n A tout moment tu peux tapper Menu pour retrouvez toutes les actions. 👍 PS : je suis un 👶🤖, je ne comprends pas encore tout ce que vous dites, merci de votre compréhension.",
     "quick_replies":[
       {
         "content_type":"text",
