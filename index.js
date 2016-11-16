@@ -48,11 +48,27 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyHello(sender)
         continue
       }
+      if (text === 'bonjour') {
+        sendQuickReplyHello(sender)
+        continue
+      }
+      if (text === 'Salut') {
+        sendQuickReplyHello(sender)
+        continue
+      }
       if (text === 'Hello') {
         sendQuickReplyHello(sender)
         continue
       }
+      if (text === 'hello') {
+        sendQuickReplyHello(sender)
+        continue
+      }
       if (text === '💬 Partager') {
+        share(sender)
+        continue
+      }
+      if (text === 'Partager') {
         share(sender)
         continue
       }
@@ -77,7 +93,8 @@ app.post('/webhook/', function (req, res) {
           sendTextMessage(sender, "De rien ! Reviens me voir quand tu veux, mais ne fume pas trop quand même 😆 ")
         continue
       }
-      sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
+      sendQuickReplyHello(sender)
+      //sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
     }
     if (event.message && event.message.attachments && event.message.attachments[0].payload) {
         if (!event.message.attachments[0].payload.coordinates) continue;
