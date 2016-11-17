@@ -255,9 +255,9 @@ function sendRobot(sender) {
       "payload": {
         "template_type": "generic",
         "elements": [{
-          "title": "Tabacouvert.fr",
-          "subtitle": "la vesion web de RoboClope",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
+          "title": "Nos copains Robots 🤖",
+          "subtitle": "Un robots pour tout faire.",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
           "buttons": [
           {
             "type": "web_url",
