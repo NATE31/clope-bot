@@ -40,8 +40,8 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyLoc(sender)
         continue
       }
-      if (text === '🚬') {
-        sendQuickReplyLoc(sender)
+      if (text === '🤖 Copains Robot') {
+        sendRobot(sender)
         continue
       }
       if (text === 'Bonjour') {
@@ -220,7 +220,7 @@ function sendLike(sender) {
             "webview_height_ratio": "compact"
           }, {
             "type": "web_url",
-            "url": "https://www.facebook.com/Tabac-ouvert-960621237397515/" ,
+            "url": "https://www.instagram.com/robotclopes/" ,
             "title": "📷 Instagram ",
             "webview_height_ratio": "compact"
           },{
@@ -246,6 +246,56 @@ function sendLike(sender) {
     }
   })
 }
+
+
+function sendRobot(sender) {
+  let messageData = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "Tabacouvert.fr",
+          "subtitle": "la vesion web de RoboClope",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
+          "buttons": [
+          {
+            "type": "web_url",
+            "url": "http://m.me/forhellojam",
+            "title": "🎓 Jam",
+          },
+          {
+            "type": "web_url",
+            "url": "http://m.me/196907940722816",
+            "title": "🗳 HelloBot",
+          },{
+            "type": "web_url",
+            "url": "http://m.me/meetcitron",
+            "title": "🍻 Citron",
+          }],
+        }, ]
+      }
+    }
+  }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+
+
 function sendGenericVersionWeb(sender) {
   let messageData = {
     "attachment": {
@@ -458,7 +508,7 @@ function sendQuickReplyAction(sender) {
       },
       {
         "content_type":"text",
-        "title":"🤑 Soutenir",
+        "title":"🤖 Copains Robot",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       }
     ]
