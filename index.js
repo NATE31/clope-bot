@@ -101,7 +101,7 @@ app.post('/webhook/', function (req, res) {
         let long = event.message.attachments[0].payload.coordinates.long;
         let lat = event.message.attachments[0].payload.coordinates.lat;
         sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité  https://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14 . Parfois la carte est legerment déclalé, dsl.")
-        sendGenericlocation(sender)
+        
         //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
         //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
       }
