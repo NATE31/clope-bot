@@ -101,6 +101,7 @@ app.post('/webhook/', function (req, res) {
         let long = event.message.attachments[0].payload.coordinates.long;
         let lat = event.message.attachments[0].payload.coordinates.lat;
         sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité  https://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14 . Parfois la carte est legerment déclalé, dsl.")
+        sendGenericlocation(sender)
         //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
         //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
       }
@@ -164,6 +165,49 @@ function sendGenericMessage(sender) {
           "buttons": [{
             "type": "web_url",
             "url": "https://map.tabacouvert.fr",
+            "title": "🚬charger la carte 🚬",
+            "webview_height_ratio": "compact"
+          }, {
+            "type": "postback",
+            "title": "Clope",
+            "payload": "Payload for first element in a generic bubble",
+          },{
+            "type": "element_share",
+            }],
+        }, ]
+      }
+    }
+  }
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token:token},
+    method: 'POST',
+    json: {
+      recipient: {id:sender},
+      message: messageData,
+    }
+  }, function(error, response, body) {
+    if (error) {
+      console.log('Error sending messages: ', error)
+    } else if (response.body.error) {
+      console.log('Error: ', response.body.error)
+    }
+  })
+}
+
+function sendGenericlocation(sender) {
+  let messageData = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "Tabacouvert.fr",
+          "subtitle": "la carte des tabacs a proximité",
+          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14" ,
             "title": "🚬charger la carte 🚬",
             "webview_height_ratio": "compact"
           }, {
