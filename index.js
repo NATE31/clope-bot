@@ -40,7 +40,7 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyLoc(sender)
         continue
       }
-      if (text === '🤖 Copains Robot') {
+      if (text === '🤖 Copains Robots') {
         sendRobot(sender)
         continue
       }
@@ -508,7 +508,7 @@ function sendQuickReplyAction(sender) {
       },
       {
         "content_type":"text",
-        "title":"🤖 Copains Robot",
+        "title":"🤖 Copains Robots",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       }
     ]
