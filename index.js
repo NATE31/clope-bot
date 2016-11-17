@@ -52,6 +52,14 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyHello(sender)
         continue
       }
+      if (text === 'Like') {
+        sendLike(sender)
+        continue
+      }
+      if (text === '❤ Amiez nous') {
+        sendLike(sender)
+        continue
+      }
       if (text === 'Salut') {
         sendQuickReplyHello(sender)
         continue
@@ -195,7 +203,7 @@ function sendGenericMessage(sender) {
   })
 }
 
-function sendGenericlocation(sender) {
+function sendLike(sender) {
   let messageData = {
     "attachment": {
       "type": "template",
@@ -207,13 +215,14 @@ function sendGenericlocation(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "http://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14" ,
-            "title": "🚬charger la carte 🚬",
+            "url": "https://www.facebook.com/Tabac-ouvert-960621237397515/" ,
+            "title": "👍 Facebook",
             "webview_height_ratio": "compact"
           }, {
-            "type": "postback",
-            "title": "Clope",
-            "payload": "Payload for first element in a generic bubble",
+            "type": "web_url",
+            "url": "https://www.facebook.com/Tabac-ouvert-960621237397515/" ,
+            "title": "📷 Instagram ",
+            "webview_height_ratio": "compact"
           },{
             "type": "element_share",
             }],
@@ -444,7 +453,7 @@ function sendQuickReplyAction(sender) {
       },
       {
         "content_type":"text",
-        "title":"🤔 Faq",
+        "title":"❤ Amiez nous",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       },
       {
