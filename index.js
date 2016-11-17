@@ -493,22 +493,22 @@ function sendQuickReplyAction(sender) {
       },
       {
         "content_type":"text",
-        "title":"💬 Partager",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
-        "title":"🚑 Arréter de fumer",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
         "title":"❤ Amiez nous",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       },
       {
         "content_type":"text",
+        "title":"💬 Partager",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
         "title":"🤖 Copains Robots",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
+        "title":"🚑 Arréter de fumer",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       }
     ]
