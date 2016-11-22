@@ -56,7 +56,7 @@ app.post('/webhook/', function (req, res) {
         sendLike(sender)
         continue
       }
-      if (text === '❤ Amiez nous') {
+      if (text === '❤ Aimez nous') {
         sendLike(sender)
         continue
       }
@@ -72,15 +72,15 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyHello(sender)
         continue
       }
-      if (text === '💬 Partager') {
+      if (text === '💬 Partagez') {
         share(sender)
         continue
       }
-      if (text === 'Partager') {
+      if (text === 'Partagez') {
         share(sender)
         continue
       }
-      if (text === '🚑 Arréter de fumer') {
+      if (text === '🚑 Arrêter de fumer') {
         sendGenericStop(sender)
         continue
       }
@@ -92,7 +92,7 @@ app.post('/webhook/', function (req, res) {
         sendQuickReplyAction(sender)
         continue
       }
-      if (text === '🖥 Vesion Web') {
+      if (text === '🖥 Version Web') {
         sendGenericVersionWeb(sender)
         continue
       }
@@ -173,7 +173,7 @@ function sendGenericMessage(sender) {
           "buttons": [{
             "type": "web_url",
             "url": "http://map.tabacouvert.fr",
-            "title": "🚬charger la carte 🚬",
+            "title": "🚬chargez la carte 🚬",
             "webview_height_ratio": "compact"
           }, {
             "type": "postback",
@@ -312,6 +312,11 @@ function sendGenericVersionWeb(sender) {
             "title": "Allé sur le site",
           },
           {
+                 'type': 'postback',
+                 'title': 'Retour au Menu',
+                 'payload': 'Menu'
+             },
+          {
             "type": "element_share",
             }],
         }, ]
@@ -343,18 +348,19 @@ function sendGenericStop(sender) {
       "payload": {
         "template_type": "generic",
         "elements": [{
-          "title": "Arrétez de fumer 😉",
+          "title": "Arrêter de fumer 😉",
           "subtitle": " 📱 La nouvelle app de l'assurance maladie",
           "image_url": "http://a2.mzstatic.com/eu/r30/Purple62/v4/aa/76/f0/aa76f0b1-d1ba-f9ce-fa03-c880d6e85c77/screen696x696.jpeg",
           "buttons": [{
             "type": "web_url",
             "url": "https://appsto.re/fr/xhu2db.i",
-            "title": "Avec une app 📱",
-          },{
-          "type":"phone_number",
-          "title":"Ou Par téléphone ☎️",
-          "payload":"+33649855544"
-       },
+            "title": "Apple store 📱",
+          },
+          {
+            "type": "web_url",
+            "url": "https://play.google.com/store/apps/details?id=fr.cnamts.tis&hl=fr",
+            "title": "Androïd store 📱",
+          },
           {
             "type": "element_share",
             }],
@@ -488,17 +494,17 @@ function sendQuickReplyAction(sender) {
       },
       {
         "content_type":"text",
-        "title":"🖥 Vesion Web",
+        "title":"🖥 Version Web",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       },
       {
         "content_type":"text",
-        "title":"❤ Amiez nous",
+        "title":"❤ Aimez nous",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       },
       {
         "content_type":"text",
-        "title":"💬 Partager",
+        "title":"💬 Partagez",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       },
       {
@@ -508,7 +514,7 @@ function sendQuickReplyAction(sender) {
       },
       {
         "content_type":"text",
-        "title":"🚑 Arréter de fumer",
+        "title":"🚑 Arrêter de fumer",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       }
     ]
