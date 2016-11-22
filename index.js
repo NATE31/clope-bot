@@ -304,6 +304,7 @@ function sendListRobot(sender) {
       "type": "template",
       "payload": {
         "template_type": "list",
+         "top_element_style": "compact",
         "elements": [
             {
                 "title": "Classic T-Shirt Collection",
@@ -311,19 +312,19 @@ function sendListRobot(sender) {
                 "subtitle": "See all our colors",
                 "default_action": {
                     "type": "web_url",
-                    "url": "https://peterssendreceiveapp.ngrok.io/shop_collection",
+                    "url": "http://m.me/forhellojam",
                     "messenger_extensions": true,
                     "webview_height_ratio": "tall",
-                    "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                    "fallback_url": "http://m.me/forhellojam"
                 },
                 "buttons": [
                     {
                         "title": "View",
                         "type": "web_url",
-                        "url": "https://peterssendreceiveapp.ngrok.io/collection",
+                        "url": "http://m.me/forhellojam",
                         "messenger_extensions": true,
                         "webview_height_ratio": "tall",
-                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                        "fallback_url": "http://m.me/forhellojam"
                     }
                 ]
             },
@@ -333,19 +334,19 @@ function sendListRobot(sender) {
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
-                    "url": "https://peterssendreceiveapp.ngrok.io/view?item=100",
+                    "url": "http://m.me/forhellojam",
                     "messenger_extensions": true,
                     "webview_height_ratio": "tall",
-                    "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                    "fallback_url": "http://m.me/forhellojam"
                 },
                 "buttons": [
                     {
                         "title": "Shop Now",
                         "type": "web_url",
-                        "url": "https://peterssendreceiveapp.ngrok.io/shop?item=100",
+                        "url": "http://m.me/forhellojam",
                         "messenger_extensions": true,
                         "webview_height_ratio": "tall",
-                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                        "fallback_url": "http://m.me/forhellojam"
                     }
                 ]
             },
@@ -355,19 +356,19 @@ function sendListRobot(sender) {
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
-                    "url": "https://peterssendreceiveapp.ngrok.io/view?item=101",
+                    "url": "http://m.me/forhellojam",
                     "messenger_extensions": true,
                     "webview_height_ratio": "tall",
-                    "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                    "fallback_url": "http://m.me/forhellojam"
                 },
                 "buttons": [
                     {
                         "title": "Shop Now",
                         "type": "web_url",
-                        "url": "https://peterssendreceiveapp.ngrok.io/shop?item=101",
+                        "url": "http://m.me/forhellojam",
                         "messenger_extensions": true,
                         "webview_height_ratio": "tall",
-                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                        "fallback_url": "http://m.me/forhellojam"
                     }
                 ]
             },
@@ -377,29 +378,23 @@ function sendListRobot(sender) {
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
-                    "url": "https://peterssendreceiveapp.ngrok.io/view?item=102",
+                    "url": "http://m.me/forhellojam",
                     "messenger_extensions": true,
                     "webview_height_ratio": "tall",
-                    "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                    "fallback_url": "http://m.me/forhellojam"
                 },
                 "buttons": [
                     {
                         "title": "Shop Now",
                         "type": "web_url",
-                        "url": "https://peterssendreceiveapp.ngrok.io/shop?item=102",
+                        "url": "http://m.me/forhellojam",
                         "messenger_extensions": true,
                         "webview_height_ratio": "tall",
-                        "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                        "fallback_url": "http://m.me/forhellojam"
                     }
                 ]
             }
-        ],"buttons": [
-           {
-               "title": "Plus",
-               "type": "postback",
-               "payload": "payload"
-           }
-       ]
+        ]
       }
     }
   }
