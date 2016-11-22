@@ -307,7 +307,7 @@ function sendListRobot(sender) {
         "elements": [
             {
                 "title": "Classic T-Shirt Collection",
-                "image_url": "https://peterssendreceiveapp.ngrok.io/img/collection.png",
+                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
                 "subtitle": "See all our colors",
                 "default_action": {
                     "type": "web_url",
@@ -329,7 +329,7 @@ function sendListRobot(sender) {
             },
             {
                 "title": "Classic White T-Shirt",
-                "image_url": "https://peterssendreceiveapp.ngrok.io/img/white-t-shirt.png",
+                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
@@ -351,7 +351,7 @@ function sendListRobot(sender) {
             },
             {
                 "title": "Classic Blue T-Shirt",
-                "image_url": "https://peterssendreceiveapp.ngrok.io/img/blue-t-shirt.png",
+                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
@@ -373,7 +373,7 @@ function sendListRobot(sender) {
             },
             {
                 "title": "Classic Black T-Shirt",
-                "image_url": "https://peterssendreceiveapp.ngrok.io/img/black-t-shirt.png",
+                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
