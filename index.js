@@ -301,103 +301,111 @@ function sendRobot(sender) {
 function sendListRobot(sender) {
   let messageData = {
     "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "list",
-         "top_element_style": "compact",
-        "elements": [
-            {
-                "title": "Classic T-Shirt Collection",
-                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
-                "subtitle": "See all our colors",
-                "default_action": {
-                    "type": "web_url",
-                    "url": "http://m.me/forhellojam",
-                    "messenger_extensions": true,
-                    "webview_height_ratio": "tall",
-                    "fallback_url": "http://m.me/forhellojam"
-                },
-                "buttons": [
-                    {
-                        "title": "View",
-                        "type": "web_url",
-                        "url": "http://m.me/forhellojam",
-                        "messenger_extensions": true,
-                        "webview_height_ratio": "tall",
-                        "fallback_url": "http://m.me/forhellojam"
-                    }
-                ]
-            },
-            {
-                "title": "Classic White",
-                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
-                "subtitle": "100% Cotton",
-                "default_action": {
-                    "type": "web_url",
-                    "url": "http://m.me/forhellojam",
-                    "messenger_extensions": true,
-                    "webview_height_ratio": "tall",
-                    "fallback_url": "http://m.me/forhellojam"
-                },
-                "buttons": [
-                    {
-                        "title": "Shop Now",
-                        "type": "web_url",
-                        "url": "http://m.me/forhellojam",
-                        "messenger_extensions": true,
-                        "webview_height_ratio": "tall",
-                        "fallback_url": "http://m.me/forhellojam"
-                    }
-                ]
-            },
-            {
-                "title": "Classic Blue ",
-                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
-                "subtitle": "100% Cotton,",
-                "default_action": {
-                    "type": "web_url",
-                    "url": "http://m.me/forhellojam",
-                    "messenger_extensions": true,
-                    "webview_height_ratio": "tall",
-                    "fallback_url": "http://m.me/forhellojam"
-                },
-                "buttons": [
-                    {
-                        "title": "Shop Now",
-                        "type": "web_url",
-                        "url": "http://m.me/forhellojam",
-                        "messenger_extensions": true,
-                        "webview_height_ratio": "tall",
-                        "fallback_url": "http://m.me/forhellojam"
-                    }
-                ]
-            },
-            {
-                "title": "Classic Black ",
-                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
-                "subtitle": "100% Cotton, 200% Comfortable",
-                "default_action": {
-                    "type": "web_url",
-                    "url": "http://m.me/forhellojam",
-                    "messenger_extensions": true,
-                    "webview_height_ratio": "tall",
-                    "fallback_url": "http://m.me/forhellojam"
-                },
-                "buttons": [
-                    {
-                        "title": "Shop Now",
-                        "type": "web_url",
-                        "url": "http://m.me/forhellojam",
-                        "messenger_extensions": true,
-                        "webview_height_ratio": "tall",
-                        "fallback_url": "http://m.me/forhellojam"
-                    }
-                ]
-            }
-        ]
-      }
-    }
-  }
+       "type": "template",
+       "payload": {
+           "template_type": "list",
+           "top_element_style": "compact",
+           "elements": [
+               {
+                   "title": "Classic White T-Shirt",
+                   "image_url": "https://peterssendreceiveapp.ngrok.io/img/white-t-shirt.png",
+                   "subtitle": "100% Cotton, 200% Comfortable",
+                   "default_action": {
+                       "type": "web_url",
+                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=100",
+                       "messenger_extensions": true,
+                       "webview_height_ratio": "tall",
+                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                   },
+                   "buttons": [
+                       {
+                           "title": "Buy",
+                           "type": "web_url",
+                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=100",
+                           "messenger_extensions": true,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                       }
+                   ]
+               },
+               {
+                   "title": "Classic Blue T-Shirt",
+                   "image_url": "https://peterssendreceiveapp.ngrok.io/img/blue-t-shirt.png",
+                   "subtitle": "100% Cotton, 200% Comfortable",
+                   "default_action": {
+                       "type": "web_url",
+                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=101",
+                       "messenger_extensions": true,
+                       "webview_height_ratio": "tall",
+                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                   },
+                   "buttons": [
+                       {
+                           "title": "Buy",
+                           "type": "web_url",
+                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=101",
+                           "messenger_extensions": true,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                       }
+                   ]
+               },
+               {
+                   "title": "Classic Black T-Shirt",
+                   "image_url": "https://peterssendreceiveapp.ngrok.io/img/black-t-shirt.png",
+                   "subtitle": "100% Cotton, 200% Comfortable",
+                   "default_action": {
+                       "type": "web_url",
+                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=102",
+                       "messenger_extensions": true,
+                       "webview_height_ratio": "tall",
+                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                   },
+                   "buttons": [
+                       {
+                           "title": "Buy",
+                           "type": "web_url",
+                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=102",
+                           "messenger_extensions": true,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                       }
+                   ]
+               },
+               {
+                   "title": "Classic Gray T-Shirt",
+                   "image_url": "https://peterssendreceiveapp.ngrok.io/img/gray-t-shirt.png",
+                   "subtitle": "100% Cotton, 200% Comfortable",
+                   "default_action": {
+                       "type": "web_url",
+                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=103",
+                       "messenger_extensions": true,
+                       "webview_height_ratio": "tall",
+                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                   },
+                   "buttons": [
+                       {
+                           "title": "Buy",
+                           "type": "web_url",
+                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=103",
+                           "messenger_extensions": true,
+                           "webview_height_ratio": "tall",
+                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
+                       }
+                   ]
+               }
+           ],
+            "buttons": [
+               {
+                   "title": "View More",
+                   "type": "postback",
+                   "payload": "payload"
+               }
+           ]
+       }
+   }
+}
+}
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {access_token:token},
@@ -431,11 +439,6 @@ function sendGenericVersionWeb(sender) {
             "url": "http://www.tabacouvert.fr",
             "title": "Allé sur le site",
           },
-          {
-                 'type': 'postback',
-                 'title': 'Retour au Menu',
-                 'payload': 'Menu'
-             },
           {
             "type": "element_share",
             }],
