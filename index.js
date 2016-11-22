@@ -308,7 +308,7 @@ function sendListRobot(sender) {
         "elements": [
             {
                 "title": "Classic T-Shirt Collection",
-                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
+                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
                 "subtitle": "See all our colors",
                 "default_action": {
                     "type": "web_url",
@@ -329,9 +329,9 @@ function sendListRobot(sender) {
                 ]
             },
             {
-                "title": "Classic White T-Shirt",
-                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
-                "subtitle": "100% Cotton, 200% Comfortable",
+                "title": "Classic White",
+                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
+                "subtitle": "100% Cotton",
                 "default_action": {
                     "type": "web_url",
                     "url": "http://m.me/forhellojam",
@@ -351,9 +351,9 @@ function sendListRobot(sender) {
                 ]
             },
             {
-                "title": "Classic Blue T-Shirt",
-                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
-                "subtitle": "100% Cotton, 200% Comfortable",
+                "title": "Classic Blue ",
+                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
+                "subtitle": "100% Cotton,",
                 "default_action": {
                     "type": "web_url",
                     "url": "http://m.me/forhellojam",
@@ -373,8 +373,8 @@ function sendListRobot(sender) {
                 ]
             },
             {
-                "title": "Classic Black T-Shirt",
-                "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
+                "title": "Classic Black ",
+                "image_url": "http://pantheone.com/modules/themeconfigurator/img/978975541fb3cad87f18481180c648f9f465b1f2_banniereeshop-1.jpg",
                 "subtitle": "100% Cotton, 200% Comfortable",
                 "default_action": {
                     "type": "web_url",
