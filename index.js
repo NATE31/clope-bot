@@ -88,6 +88,11 @@ app.post('/webhook/', function (req, res) {
         sendGenericStop(sender)
         continue
       }
+      if (text === '📅 Ouvert le Dimanche') {
+        sendTextMessage(sender, "Malheuresement, La base de donnée du gouvernement ne précise pas les horraires d'ouverture des tabacs")
+      continue
+      }
+
       if (text === 'Menu') {
         sendQuickReplyAction(sender)
         continue
@@ -112,7 +117,7 @@ app.post('/webhook/', function (req, res) {
         if (!event.message.attachments[0].payload.coordinates) continue;
         let long = event.message.attachments[0].payload.coordinates.long;
         let lat = event.message.attachments[0].payload.coordinates.lat;
-        sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité  http://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=14 . Parfois la carte est legerment déclalé, dsl.")
+        sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité https://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=15 .")
 
         //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
         //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
@@ -176,7 +181,7 @@ function sendGenericMessage(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "http://map.tabacouvert.fr",
+            "url": "https://map.tabacouvert.fr",
             "title": "🚬chargez la carte 🚬",
             "webview_height_ratio": "compact"
           }, {
@@ -428,8 +433,8 @@ function sendGenericVersionWeb(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "http://www.tabacouvert.fr",
-            "title": "Allé sur le site",
+            "url": "https://www.tabacouvert.fr",
+            "title": "Aller sur le site",
           },
           {
             "type": "element_share",
@@ -615,6 +620,11 @@ function sendQuickReplyAction(sender) {
       {
         "content_type":"text",
         "title":"❤ Aimez nous",
+        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
+      },
+      {
+        "content_type":"text",
+        "title":"📅 Ouvert le Dimanche",
         "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
       },
       {
