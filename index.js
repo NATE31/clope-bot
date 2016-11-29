@@ -225,16 +225,20 @@ function sendLike(sender) {
           "buttons": [{
             "type": "web_url",
             "url": "https://www.facebook.com/Tabac-ouvert-960621237397515/" ,
-            "title": "👍 Facebook",
-            "webview_height_ratio": "compact"
+            "title": "👍 Notre page",
+            "webview_height_ratio": "tall"
           }, {
+            "type": "web_url",
+            "url": "https://www.facebook.com/sharer/sharer.php?app_id=113869198637480&sdk=joey&u=https%3A%2F%2Fm.me%2F960621237397515&display=popup&ref=plugin&src=share_button" ,
+            "title": "Partagez sur facebook ",
+            "webview_height_ratio": "compact"
+          },
+          {
             "type": "web_url",
             "url": "https://www.instagram.com/robotclopes/" ,
             "title": "📷 Instagram ",
-            "webview_height_ratio": "compact"
-          },{
-            "type": "element_share",
-            }],
+            "webview_height_ratio": "tall"
+          }],
         }, ]
       }
     }
