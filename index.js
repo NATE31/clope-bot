@@ -89,7 +89,7 @@ app.post('/webhook/', function (req, res) {
         continue
       }
       if (text === '📅 Ouvert le Dimanche') {
-        sendTextMessage(sender, "Malheuresement, La base de donnée du gouvernement ne précise pas les horraires d'ouverture des tabacs")
+        sendTextMessage(sender, "Malheuresement, la base de donnée du gouvernement ne précise pas les horaires d'ouverture des tabacs. Nous allons prochainement ajouter une fonctionnalité pour ajouter les tabacs ouverts en attendant, vous pouvez nous envoyer des photos des tabacs pour nous remonter l'information. Merci. ")
       continue
       }
 
