@@ -117,7 +117,7 @@ app.post('/webhook/', function (req, res) {
         if (!event.message.attachments[0].payload.coordinates) continue;
         let long = event.message.attachments[0].payload.coordinates.long;
         let lat = event.message.attachments[0].payload.coordinates.lat;
-        sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité https://map.tabacouvert.fr/?lat=" + lat +"&long="+ long + "&zoom=15 .")
+        sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité https://malorchrd.github.io/first-map/?lat=" + lat +"&long="+ long + "&zoom=15 .")
 
         //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
         //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
@@ -181,7 +181,7 @@ function sendGenericMessage(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://map.tabacouvert.fr",
+            "url": "https://malorchrd.github.io/first-map/",
             "title": "🚬chargez la carte 🚬",
             "webview_height_ratio": "compact"
           }, {
@@ -437,7 +437,7 @@ function sendGenericVersionWeb(sender) {
           "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
           "buttons": [{
             "type": "web_url",
-            "url": "https://www.tabacouvert.fr",
+            "url": "https://malorchrd.github.io/first-map/",
             "title": "Aller sur le site",
           },
           {
