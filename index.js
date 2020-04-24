@@ -1,674 +1,846 @@
 'use strict'
+// ----------------------- NOS MODULES -------------------------
+const bodyParser = require( 'body-parser' );
+const crypto = require( 'crypto' );
+const express = require( 'express' );
+const fetch = require( 'node-fetch' );
+const request = require( 'request' );
+const requestify = require( 'requestify' );
+const firebase = require('firebase');
+const admin = require("firebase-admin");
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const request = require('request')
-const app = express()
-
-app.set('port', (process.env.PORT || 8000))
-
-
-// parse application/json
-app.use(bodyParser.json())
-
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
-
-
-// index
-app.get('/', function (req, res) {
-  res.send('je suis RobotClop ')
-})
-
-// for facebook verification
-app.get('/webhook/', function (req, res) {
-  if (req.query['hub.verify_token'] === '123456789') {
-    res.send(req.query['hub.challenge'])
-  }
-  res.send('Error, wrong token')
-})
-
-// to post data
-app.post('/webhook/', function (req, res) {
-  let messaging_events = req.body.entry[0].messaging
-  for (let i = 0; i < messaging_events.length; i++) {
-    let event = req.body.entry[0].messaging[i]
-    let sender = event.sender.id
-    if (event.message && event.message.text) {
-      let text = event.message.text
-      if (text === 'Clope🚬') {
-        sendQuickReplyLoc(sender)
-        continue
-      }
-      if (text === '🤖 Copains Robots') {
-        sendRobot(sender)
-        continue
-      }
-      if (text === 'liste') {
-        sendListRobot(sender)
-        continue
-      }
-      if (text === 'Bonjour') {
-        sendQuickReplyHello(sender)
-        continue
-      }
-      if (text === 'bonjour') {
-        sendQuickReplyHello(sender)
-        continue
-      }
-      if (text === 'Like') {
-        sendLike(sender)
-        continue
-      }
-      if (text === '❤ Aimez nous') {
-        sendLike(sender)
-        continue
-      }
-      if (text === 'Salut') {
-        sendQuickReplyHello(sender)
-        continue
-      }
-      if (text === 'Hello') {
-        sendQuickReplyHello(sender)
-        continue
-      }
-      if (text === 'hello') {
-        sendQuickReplyHello(sender)
-        continue
-      }
-      if (text === '💬 Partagez') {
-        share(sender)
-        continue
-      }
-      if (text === 'Partagez') {
-        share(sender)
-        continue
-      }
-      if (text === '🚑 Arrêter de fumer') {
-        sendGenericStop(sender)
-        continue
-      }
-      if (text === '📅 Ouvert le Dimanche') {
-        sendTextMessage(sender, "Malheuresement, la base de données du gouvernement ne précise pas les horaires d'ouverture des tabacs. Nous allons prochainement ajouter une fonctionnalité pour ajouter les tabacs ouverts en attendant, vous pouvez nous envoyer des photos des tabacs pour nous remonter l'information. Merci. ")
-      continue
-      }
-
-      if (text === 'Menu') {
-        sendQuickReplyAction(sender)
-        continue
-      }
-      if (text === 'menu') {
-        sendQuickReplyAction(sender)
-        continue
-      }
-      if (text === '🖥 Version Web') {
-        sendGenericVersionWeb(sender)
-        continue
-      }
-
-      if (text === 'Merci') {
-          sendTextMessage(sender, "De rien ! Reviens me voir quand tu veux, mais ne fume pas trop quand même 😆 ")
-        continue
-      }
-      sendQuickReplyHello(sender)
-      //sendTextMessage(sender, "😆 Dsl je ne comprend pas " + text.substring(0, 200) + "😆 Tape Menu pour commencer.")
-    }
-    if (event.message && event.message.attachments && event.message.attachments[0].payload) {
-        if (!event.message.attachments[0].payload.coordinates) continue;
-        let long = event.message.attachments[0].payload.coordinates.long;
-        let lat = event.message.attachments[0].payload.coordinates.lat;
-        sendTextMessage(sender, "Merci j'ai bien reçu ta géolocalisation, clic sur le lien pour chargé la carte des Tabacs a proximité https://malorchrd.github.io/first-map/?lat=" + lat +"&lon="+ long + "&zoom=15 .")
-
-        //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
-        //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
-      }
-    //console.log('Event: ', event);
-    //console.log('Event.message : ', event.message);
-    //console.log('Event.attachments : ', JSON.stringify(event.message.attachments));
-    //console.log('Event.lat : ', JSON.stringify(event.message.attachments[0].payload.coordinates.lat));
-    //console.log('Event.long : ', JSON.stringify(event.message.attachments[0].payload.coordinates.long));
-
-     //if (event.message && event.message.attachments && event.message.attachments[0] && event.message.attachments[0].payload && event.message.attachments[0].payload.coordinates) {
-    	//let	latitutde = JSON.stringify(event.message.attachments[0].payload.coordinates.lat);
-    //	let	longitude = JSON.stringify(event.message.attachments[0].payload.coordinates.long);
-      //  console.log( 'location : ',latitutde + ',' +longitude);
-    		//totUrl = urlBase + String(lat) + "," + String(lon) + ".json"
-
-  //if (event.message) {
-  //lat = JSON.stringify(event.attachments[0].payload.coordinates.lat)
-  //  console.log(lat)
-    //sendTextMessage(sender, "position received: " +  + JSON.stringify(event.attachments[0].payload.coordinates.long))
-    //continue
-    //}
-  }
-  res.sendStatus(200)
-})
-
-
-// recommended to inject access tokens as environmental variables, e.g.
-// const token = process.env.PAGE_ACCESS_TOKEN
-const token = "EAAPl1gRvsSYBAHADDXnt0q25LaFuahVcXdCESjxwQEXbJWZBTeIaiZBH6IfSzeDpv1vKrjoaY9hSZBn3IvkVyHQg7tc2KBqjrIF45MLRJ35K3JwBC89j4QIGlThrWR77jZAZBEDKZCgbaPlm8AYAwcnqPkOysDrDUZC8ZAZBFZBs845wZDZD"
-
-function sendTextMessage(sender, text) {
-  let messageData = { text:text }
-
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
+let Wit = null;
+let log = null;
+try {
+  Wit = require( '../' ).Wit;
+  log = require( '../' ).log;
+} catch ( e ) {
+  Wit = require( 'node-wit' ).Wit;
+  log = require( 'node-wit' ).log;
 }
 
-function sendGenericMessage(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "Tabacouvert.fr",
-          "subtitle": "la vesion web de RoboClope",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://malorchrd.github.io/first-map/",
-            "title": "🚬chargez la carte 🚬",
-            "webview_height_ratio": "compact"
-          }, {
-            "type": "postback",
-            "title": "Clope",
-            "payload": "Payload for first element in a generic bubble",
-          },{
-            "type": "element_share",
-            }],
-        }, ]
-      }
-    }
+// ----------------------- FIREBASE INIT -------------------------
+firebase.initializeApp(
+  {
+    apiKey: "AIzaSyCBWm78EsKP4f4hiDko7MYgMjvaqs25zak",
+     authDomain: "nateoccitanie.firebaseapp.com",
+     databaseURL: "https://nateoccitanie.firebaseio.com",
+     projectId: "nateoccitanie",
+     storageBucket: "nateoccitanie.appspot.com",
+     messagingSenderId: "253894949858"
   }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
+);
 
-function sendLike(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "Tabacouvert.fr",
-          "subtitle": "la carte des tabacs a proximité",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://www.facebook.com/Tabac-ouvert-960621237397515/" ,
-            "title": "👍 Notre page",
-            "webview_height_ratio": "tall"
-          }, {
-            "type": "web_url",
-            "url": "https://www.facebook.com/sharer/sharer.php?app_id=113869198637480&sdk=joey&u=https%3A%2F%2Fm.me%2F960621237397515&display=popup&ref=plugin&src=share_button" ,
-            "title": "Partagez sur facebook ",
-            "webview_height_ratio": "compact"
-          },
-          {
-            "type": "web_url",
-            "url": "https://www.instagram.com/robotclopes/" ,
-            "title": "📷 Instagram ",
-            "webview_height_ratio": "tall"
-          }],
-        }, ]
+admin.initializeApp( {
+  credential: admin.credential.cert( {
+    "type": "service_account",
+    "project_id": "nateoccitanie",
+    "private_key_id": "7a9e3703c14c42f375f5d79f46550fc295be9c1c",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCkp2Tlqt+oYxrJ\nTpReDYePldiWRy+bBol115/OnSh04NeFVcaVHrpdQ8Ph2FruB3tqN2Q+BA+ODx/B\nPv3z4z+FGZB19jJmjzeZH68Ykp8AXwZiEfMf6IpX39Xh4OGxSc1LFswKL5KXSrat\ns6p4/pFKG9JLKipCU/mN7mx6ajvZoQ4KOhEfM9JRpnUkuo5ROy4Xc73+h66WmuFY\nodImB1M1w1Fqu8EcAKwmmfu1RihNJ5HG2zTwplHDkmcU6M3loMuyZXSMCrcvmbWR\nomIvscUUpwlYaKUoQ62n8CEIjo6oV8VIJtCrIqpLxdB3UDNl8lJmTnBVgl/vzKy0\nYZCQcKkxAgMBAAECggEAROEh/FH3LmIHGp+cwZu3UgHFkVhGOfwKFRoW6EAmZH6K\nqmSvpkIshEeM8jWoFFtc7ZoufSMFvs/k4NqRMi2mrO9811weyXiwMYZnoUf07BrU\neMI5iuekuA4TU2LYB2pwTzFCOiCcml3O/etjLSqRbQcmefsxon2usAlFqBA46Vki\nbqpX7jNnSCmq4Xc7t/rt0uIuoIj7gMZCiscKdMJ1Eo7jD1SRfiA6B4KLq5wqIX5c\nDkE2gms9pgHoKMzHb8/Jb/oqIh5wEOpVgTo8RY+Q0WLkaPyOqc1aJvj1N40YcDAH\n8D0bMWkAUkuoBgMzs0gubIxnGBcKQFLRmJM6Sl3C4QKBgQDcBYTWXJyg6Kc47p78\ndjb7qdQ30J/dEimGoyvMbbCv0qI9mr0TL+rsWbK+g20W01Isk4U42MajQOC5II7e\nmB9VxN1ZgUiVVMOEetD0xPA1wiyHxhUbDDuJb/ofwvCmmkC9IKUpEZWgAApQYmU5\nQd9hfZfqCzD+QHr2AjMfPbdsqwKBgQC/lBbNUXZZHiNJjbZNNnaChyu5P9ZgGt+7\nNnRnnhKRj8NsuSPMTOGbRizBgdqod+MDhfsHfRO/YZsP79K5U2oRTtVToBSBxt5/\nkQf7gAKQlU0byvDJxR397m0dIXCjR+dyOiJ0JQ2VlQ0zkojg+xoFjpjotELeJHpC\nIYPyzWHJkwKBgQCElGLGVQogv/C8ErYExSs+nMh/VZxvN1mEguCKj/JvEEqpOowC\netZh028s878RiQc0SzR029NeXmLLyz2sDhibs0P6gjf9nBUwyF0PkXh5vGbe7dKb\n+NQLbklXSD2A9uRZ0skTJUB3KG8OnywFw5bahTa8VkAQhURS52JsyeC0fwKBgAey\nYmwjTrbr4A0PdXiKrJ434gjSSMGZss1ptamID0Tr2rUehxKpMBM18YxgtDE6h9NX\naat2WfnBaSJtxzCM6mEBos52SvyfycakRAbVsMSwSuXH9H6Wvcq67oVSF51nwSO0\ntDeoWXBeCaa9x2QKkpQQk5Id0+Xq30KS6CM0Hy6jAoGAfzfULVLzU78bladfK8hf\n7KLkL96uBJ4q6NlQr6hqcNYkxthAuCwfw1nEHLy14XVMR56U1kkjovoRjxcCz8DZ\nYfJ4sTgwIx3kwjqsmsJArF4tgE6qbcy/NceNc5xJi8Z2fXJL1LZ/0DAPwKySoPev\nAid4e3rJ9aEqFS0UXmaqKRg=\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-qmj6e@nateoccitanie.iam.gserviceaccount.com",
+    "client_id": "114926604003074143787",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-qmj6e%40nateoccitanie.iam.gserviceaccount.com"
+  }),
+  databaseURL: "https://nateoccitanie.firebaseio.com"
+});
+
+
+// ----------------------- API KEY openweathermap -------------------------
+var api_key_weather = "xxxx";
+// ----------------------- PARAMETRES DU SERVEUR -------------------------
+const PORT = process.env.PORT || 5000;
+// Wit.ai parameters
+const WIT_TOKEN = "XRMXW46ZCH2ZGTNEP2QAZKYGDVFDRZFH";   // saisir ici vos informations (infos sur session XX)
+// Messenger API parameters
+const FB_PAGE_TOKEN = "EAADU3dPjxZBgBAPjZCwQLmrlQJeOauOJNNIdyyE0L7xmZBZAjwt2EXY1OxM7kaTL3Y9mTZATIfVMepxjYf6D567HZAK3fiQgcqtgXpEuAd2ZAcD21Gq0aIHWW5EKurcwpVHUBbRLkkyD1IpRMDZAPZBRO427totGBb09LJvDbI3ODhTOsOr9pu7BZC";   // saisir ici vos informations (infos sur session XX)
+if ( !FB_PAGE_TOKEN ) {
+  throw new Error( 'missing FB_PAGE_TOKEN' )
+}
+const FB_APP_SECRET = "02ee3a1804ec4367761f6f779be939bf";   // saisir ici vos informations (infos sur session XX)
+if ( !FB_APP_SECRET ) {
+  throw new Error( 'missing FB_APP_SECRET' )
+}
+let FB_VERIFY_TOKEN = "Ppastaga51";   // saisir ici vos informations (infos sur session XX)
+crypto.randomBytes( 8, ( err, buff ) => {
+  if ( err ) throw err;
+  FB_VERIFY_TOKEN = buff.toString( 'hex' );
+  console.log( `/webhook will accept the Verify Token "${FB_VERIFY_TOKEN}"` );
+} );
+
+// ----------------------- FONCTION POUR VERIFIER UTILISATEUR OU CREER ----------------------------
+var checkAndCreate = (fbid, prenom, nom, genre) => {
+	var userz = firebase.database()
+		.ref()
+		.child("accounts")
+		.orderByChild("fbid")
+		.equalTo(fbid)
+		.once("value", function(snapshot) {
+				admin.auth()
+					.createCustomToken(fbid)
+					.then(function(customToken) {
+						firebase.auth()
+							.signInWithCustomToken(customToken)
+							.then(function() {
+								//inserer notre compte
+								var user2 = firebase.auth().currentUser;
+								var keyid = firebase.database()
+									.ref()
+									.child('accounts')
+									.push();
+								firebase.database()
+									.ref()
+									.child('accounts')
+									.child(keyid.key)
+									.set({
+										fbid: fbid,
+                    prenom : prenom,
+                    nom : nom,
+                    genre : genre,
+										date: new Date()
+											.toISOString()
+									})
+									.catch(function(error2) {
+										console.log(error2);
+									});
+							})
+							.catch(function(error) {
+								// Handle Errors here.
+								var errorCode = error.code;
+								var errorMessage = error.message;
+							});
+					})
+					.catch(function(error3) {
+						console.log("Erreur : "+ error3);
+					});
+		});
+};
+// ------------------------ FONCTION DEMANDE INFORMATIONS USER -------------------------
+var requestUserName = (id) => {
+	var qs = 'access_token=' + encodeURIComponent(FB_PAGE_TOKEN);
+	return fetch('https://graph.facebook.com/v2.8/' + encodeURIComponent(id) + '?' + qs)
+		.then(rsp => rsp.json())
+		.then(json => {
+			if (json.error && json.error.message) {
+				throw new Error(json.error.message);
+			}
+			return json;
+		});
+};
+// ------------------------- ENVOI MESSAGES SIMPLES ( Texte, images, boutons g�n�riques, ...) -----------
+var fbMessage = ( id, data ) => {
+  var body = JSON.stringify( {
+    recipient: {
+      id
+    },
+    message: data,
+  } );
+  console.log( "BODY" + body );
+  var qs = 'access_token=' + encodeURIComponent( FB_PAGE_TOKEN );
+  return fetch( 'https://graph.facebook.com/me/messages?' + qs, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body,
+  } ).then( rsp => rsp.json() ).then( json => {
+    if ( json.error && json.error.message ) {
+      console.log( json.error.message + ' ' + json.error.type + ' ' +
+        json.error.code + ' ' + json.error.error_subcode + ' ' + json.error
+        .fbtrace_id );
+    }
+    return json;
+  } );
+};
+// ----------------------------------------------------------------------------
+const sessions = {};
+// ------------------------ FONCTION DE CREATION DE SESSION ---------------------------
+var findOrCreateSession = (fbid) => {
+	let sessionId;
+	Object.keys(sessions)
+		.forEach(k => {
+			if (sessions[k].fbid === fbid) {
+				sessionId = k;
+			}
+		});
+	if (!sessionId) {
+		sessionId = new Date()
+			.toISOString();
+		sessions[sessionId] = {
+			fbid: fbid,
+			context: {}
+		};
+    requestUserName(fbid)
+      .then((json) => {
+        sessions[sessionId].name = json.first_name;
+				checkAndCreate(fbid, json.first_name,  json.last_name, json.gender);
+      })
+      .catch((err) => {
+        console.error('Oops! Il y a une erreur : ', err.stack || err);
+      });
+	}
+	return sessionId;
+};
+// ------------------------ FONCTION DE RECHERCHE D'ENTITES ---------------------------
+var firstEntityValue = function( entities, entity ) {
+    var val = entities && entities[ entity ] && Array.isArray( entities[ entity ] ) &&
+      entities[ entity ].length > 0 && entities[ entity ][ 0 ].value
+    if ( !val ) {
+      return null
+    }
+  return typeof val === 'object' ? val.value : val
+}
+// ------------------------ LISTE DE TOUTES VOS ACTIONS A EFFECTUER ---------------------------
+
+var actions = {
+  // fonctions gen�rales � d�finir ici
+  send( {sessionId}, response ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    if ( recipientId ) {
+      if ( response.quickreplies ) {
+        response.quick_replies = [];
+        for ( var i = 0, len = response.quickreplies.length; i < len; i++ ) {
+          response.quick_replies.push( {
+            title: response.quickreplies[ i ],
+            content_type: 'text',
+            payload: response.quickreplies[ i ]
+          } );
+        }
+        delete response.quickreplies;
       }
+      return fbMessage( recipientId, response )
+        .then( () => null )
+        .catch( ( err ) => {
+          console.log( "Je send" + recipientId );
+          console.error(
+            'Oops! erreur ',
+            recipientId, ':', err.stack || err );
+        } );
+    } else {
+      console.error( 'Oops! utilisateur non trouv� : ', sessionId );
+      return Promise.resolve()
     }
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-
-function sendRobot(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "Nos copains Robots 🤖",
-          "subtitle": "Un robots pour tout faire.",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.0-9/15107426_985854458207526_8242138474337741286_n.png?oh=ed1bfdfc287e8c27ff48ba478f5ac450&oe=58D4AF28",
-          "buttons": [
-          {
-            "type": "web_url",
-            "url": "http://m.me/forhellojam",
-            "title": "🎓 Jam",
-          },
-          {
-            "type": "web_url",
-            "url": "http://m.me/196907940722816",
-            "title": "🗳 HelloBot",
-          },{
-            "type": "web_url",
-            "url": "http://m.me/meetcitron",
-            "title": "🍻 Citron",
-          }],
-        }, ]
+  },
+  envoyer_message_text( sessionId, context, entities, text ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    var response = {
+      "text": text
+    };
+    return fbMessage( recipientId, response )
+      .then( () => {} )
+      .catch( ( err ) => {
+        console.log( "Erreur envoyer_message_text" + recipientId );
+      } );
+  },
+  getUserName( sessionId, context, entities ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    const name = sessions[ sessionId ].name || null;
+    return new Promise( function( resolve, reject ) {
+      if ( recipientId ) {
+        if ( name ) {
+            context.userName = name;
+            resolve( context );
+        } else {
+          requestUserName( recipientId )
+            .then( ( json ) => {
+              sessions[ sessionId ].name = json.first_name;
+              context.userName = json.first_name;
+              resolve( context );
+            } )
+            .catch( ( err ) => {
+              console.log( "ERROR = " + err );
+              console.error(
+                'Oops! Erreur : ',
+                err.stack || err );
+              reject( err );
+            } );
+        }
+      } else {
+        console.error( 'Oops! pas trouv� user :',
+          sessionId );
+        reject();
       }
-    }
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
+    } );
+  },
+envoyer_message_bouton_generique( sessionId, context, entities, elements ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    return fbMessage( recipientId, elements )
+      .then( () => {} )
+      .catch( ( err ) => {
+        console.log( "Erreur envoyer_message_bouton_generique" + recipientId );
+      } );
+  },
+envoyer_message_quickreplies( sessionId, context, entities, text, quick ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    var response2 = {
+      "text": text,
+      "quick_replies": quick
+    };
+    return fbMessage( recipientId, response2 )
+      .then( () => {} )
+      .catch( ( err ) => {
+        console.log( "Erreur envoyer_message_text" + recipientId );
+      } );
+  },
+envoyer_message_image( sessionId, context, entities, image_url ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    var response = {
+        "attachment":{
+        "type":"image",
+        "payload":{
+          "url": image_url
+        }
+      }
+    };
+    return fbMessage( recipientId, response )
+      .then( () => {} )
+      .catch( ( err ) => {
+        console.log( "Erreur envoyer_message_text" + recipientId );
+      } );
+  },
+choixCategories( sessionId,context ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    if ( recipientId ) {
+      console.log( "CONTEXT DANS choixCategories" + context );
+      var response = {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [
+                        {
+                          "title": "NutriScore",
+                          "image_url": "https://mon-chatbot.com/nutribot2018/images/nutriscore-good.jpg",
+                          "subtitle": "Recherchez ici un produit alimentaire et ses équivalents plus sains.",
+                          "buttons": [
+                            {
+                              "type": "postback",
+                              "title": " Informations",
+                              "payload": "INFOS_SUR_LE_NUTRI"
+                            },
+                            {
+                              "type": "postback",
+                              "title": " Rechercher",
+                              "payload": "PRODUIT_PLUS_SAIN"
+                            },
+                            {
+                              "type": "postback",
+                              "title": " Produit + sain",
+                              "payload": "ALTERNATIVE_BEST"
+                            }
 
-function sendListRobot(sender) {
-  let messageData = {
-    "attachment": {
-       "type": "template",
-       "payload": {
-           "template_type": "list",
-           "top_element_style": "large",
-           "elements": [
-               {
-                   "title": "Classic White T-Shirt",
-                   "default_action": {
-                       "type": "web_url",
-                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=100",
-                       "messenger_extensions": true,
-                       "webview_height_ratio": "tall",
-                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                   },
-                   "buttons": [
-                       {
-                           "title": "Buy",
-                           "type": "web_url",
-                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=100",
-                           "messenger_extensions": true,
-                           "webview_height_ratio": "tall",
-                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                       }
                    ]
-               },
-               {
-                   "title": "Classic Blue T-Shirt",
-                   "default_action": {
-                       "type": "web_url",
-                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=101",
-                       "messenger_extensions": true,
-                       "webview_height_ratio": "tall",
-                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                   },
-                   "buttons": [
-                       {
-                           "title": "Buy",
-                           "type": "web_url",
-                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=101",
-                           "messenger_extensions": true,
-                           "webview_height_ratio": "tall",
-                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                       }
-                   ]
-               },
-               {
-                   "title": "Classic Black T-Shirt",
-                   "default_action": {
-                       "type": "web_url",
-                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=102",
-                       "messenger_extensions": true,
-                       "webview_height_ratio": "tall",
-                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                   },
-                   "buttons": [
-                       {
-                           "title": "Buy",
-                           "type": "web_url",
-                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=102",
-                           "messenger_extensions": true,
-                           "webview_height_ratio": "tall",
-                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                       }
-                   ]
-               },
-               {
-                   "title": "Classic Gray T-Shirt",
-                   "default_action": {
-                       "type": "web_url",
-                       "url": "https://peterssendreceiveapp.ngrok.io/view?item=103",
-                       "messenger_extensions": true,
-                       "webview_height_ratio": "tall",
-                       "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                   },
-                   "buttons": [
-                       {
-                           "title": "Buy",
-                           "type": "web_url",
-                           "url": "https://peterssendreceiveapp.ngrok.io/shop?item=103",
-                           "messenger_extensions": true,
-                           "webview_height_ratio": "tall",
-                           "fallback_url": "https://peterssendreceiveapp.ngrok.io/"
-                       }
-                   ]
+                 },
+                 {
+                "title": "Le sucre",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/sucre.jpg",
+                "subtitle": "Connaissez-vous réellement le Sucre ? Percez ici tous ses mystères !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_SUCRE"
+                 }
+               ]
+             },
+              {
+                "title": "Les aliments",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/aliments.jpg",
+                "subtitle": "Quels aliments contiennent du sucre ? Vous allez être surpris !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_ALIMENTS"
+                }
+              ]
+            },
+              {
+                "title": "Les additifs",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/additifs.jpg",
+                "subtitle": "C'est quoi un additif ? Où les trouvent-on ?",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_ADDITIFS"
                }
-           ],
-            "buttons": [
-               {
-                   "title": "View More",
-                   "type": "postback",
-                   "payload": "payload"
-               }
+             ]
+           },
+              {
+                "title": "Les nutriments",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/nutriments.jpg",
+                "subtitle": "Eléments indispensables �  l'Homme ! Découvrez tous les secrets des nutriments.",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_NUTRIMENTS"
+              }
+            ]
+          },
+              {
+                "title": "La diététique",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/diet.jpg",
+                "subtitle": "Découvrez ici tous mes conseils concernant la diététique !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_DIETETIQUE"
+             }
            ]
-       }
-   }
-}
+         },
+              {
+                "title": "L'organisme",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/organisme.jpg",
+                "subtitle": "Ici vous découvrirez tous les secrets concernant votre corps et le sucre !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_ORGANISME"
+            }
+          ]
+        }
 
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
+
+        ]
+          }
+        }
+      };
+      var response_text = {
+        "text": "PS : Voici mes derniers posts ^^ Si cela peux t'aider ..."
+      };
+      return fbMessage( recipientId, response_text ).then( () => {
+        return fbMessage( recipientId, response ).then( () => {
+          console.log( "okay choixCategories " + recipientId );
+        } ).catch( ( err ) => {
+          console.log( "Erreur choixCategories" + recipientId );
+          console.error( 'Oops! An error forwarding the response to',
+            recipientId, ':', err.stack || err );
+        } );
+        console.log( "okay choixCategories " + recipientId );
+      } ).catch( ( err ) => {
+        console.log( "Erreur choixCategories" + recipientId );
+        console.error( 'Oops! An error forwarding the response to',
+          recipientId, ':', err.stack || err );
+      } );
+    } else {
+      console.error( 'Oops! Couldn\'t find user for session:', sessionId );
+      return Promise.resolve()
     }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
+  },
+choixCategories_retour( sessionId,context ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    if ( recipientId ) {
+      console.log( "CONTEXT DANS choixCategories_retour" + context );
+      var response = {
+        "attachment": {
+          "type": "template",
+          "payload": {
+            "template_type": "generic",
+            "elements": [
+                        {
+                          "title": "NutriScore",
+                          "image_url": "https://mon-chatbot.com/nutribot2018/images/nutriscore-good.jpg",
+                          "subtitle": "Recherchez ici un produit alimentaire et ses équivalents plus sains.",
+                          "buttons": [
+                            {
+                              "type": "postback",
+                              "title": "❓ Informations",
+                              "payload": "INFOS_SUR_LE_NUTRI"
+                            },
 
-
-function sendGenericVersionWeb(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "Tabacouvert.fr",
-          "subtitle": "la vesion web de RoboClope",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14976513_979319085527730_5493980096925820644_o.jpg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://malorchrd.github.io/first-map/",
-            "title": "Aller sur le site",
+                            {
+                              "type": "postback",
+                              "title": "🔍 Rechercher",
+                              "payload": "PRODUIT_PLUS_SAIN"
+                            },
+                            {
+                              "type": "postback",
+                              "title": "🍏 Produit + sain",
+                              "payload": "ALTERNATIVE_BEST"
+                            }
+                   ]
+                 },
+                 {
+                "title": "Le sucre",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/sucre.jpg",
+                "subtitle": "Connaissez-vous réellement le Sucre ? Percez ici tous ses mystères !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_SUCRE"
+                 }
+               ]
+             },
+              {
+                "title": "Les aliments",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/aliments.jpg",
+                "subtitle": "Quels aliments contiennent du sucre ? Vous allez être surpris !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_ALIMENTS"
+                }
+              ]
+            },
+              {
+                "title": "Les additifs",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/additifs.jpg",
+                "subtitle": "C'est quoi un additif ? Où les trouvent-on ?",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_ADDITIFS"
+               }
+             ]
+           },
+              {
+                "title": "Les nutriments",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/nutriments.jpg",
+                "subtitle": "Eléments indispensables �  l'Homme ! Découvrez tous les secrets des nutriments.",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_NUTRIMENTS"
+              }
+            ]
           },
-          {
-            "type": "element_share",
-            }],
-        }, ]
-      }
-    }
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
+              {
+                "title": "La diététique",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/diet.jpg",
+                "subtitle": "Découvrez ici tous mes conseils concernant la diététique !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_DIETETIQUE"
+             }
+           ]
+         },
+              {
+                "title": "L'organisme",
+                "image_url": "https://mon-chatbot.com/nutribot2018/images/organisme.jpg",
+                "subtitle": "Ici vous découvrirez tous les secrets concernant votre corps et le sucre !",
+                "buttons": [
+                  {
+                    "type": "postback",
+                    "title": "En Savoir +",
+                    "payload": "CAT_ORGANISME"
+            }
+          ]
+        }
 
 
-function sendGenericStop(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "Arrêter de fumer 😉",
-          "subtitle": " 📱 La nouvelle app de l'assurance maladie",
-          "image_url": "http://a2.mzstatic.com/eu/r30/Purple62/v4/aa/76/f0/aa76f0b1-d1ba-f9ce-fa03-c880d6e85c77/screen696x696.jpeg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://appsto.re/fr/xhu2db.i",
-            "title": "Apple store 📱",
+        ]
+          }
+        }
+      };
+      var response_text = {
+        "text": "Tr�s bien, recommen�ons ! Voici les th�mes que je peux vous te sug�rer:"
+      };
+      return fbMessage( recipientId, response_text ).then( () => {
+        return fbMessage( recipientId, response ).then( () => {
+          console.log( "okay choixCategories " + recipientId );
+        } ).catch( ( err ) => {
+          console.log( "Erreur choixCategories" + recipientId );
+          console.error( 'Oops! An error forwarding the response to',
+            recipientId, ':', err.stack || err );
+        } );
+        console.log( "okay choixCategories " + recipientId );
+      } ).catch( ( err ) => {
+        console.log( "Erreur choixCategories" + recipientId );
+        console.error( 'Oops! An error forwarding the response to',
+          recipientId, ':', err.stack || err );
+      } );
+    } else {
+      console.error( 'Oops! Couldn\'t find user for session:', sessionId );
+      return Promise.resolve()
+    }
+  },
+remerciements(entities,context,sessionId) {
+    const recipientId = sessions[ sessionId ].fbid;
+    var response2 = {
+    "text": "De rien, n'h�sites-pas �  me solliciter ! :-)",
+    "quick_replies": [
+      {
+        "content_type": "text",
+        "title": "Retourner �  l'accueil",
+        "payload": "RETOUR_ACCUEIL",
+        "image_url": "https://mon-chatbot.com/nutribot2018/images/back.png"
           },
-          {
-            "type": "web_url",
-            "url": "https://play.google.com/store/apps/details?id=fr.cnamts.tis&hl=fr",
-            "title": "Androïd store 📱",
+      {
+        "content_type": "text",
+        "title": "Au revoir",
+        "payload": "ByeByeBye",
+        "image_url": "https://mon-chatbot.com/nutribot2018/images/exit.png"
+          }
+        ]
+    };
+    return fbMessage( recipientId, response2 ).then( () => {} )
+      .catch( ( err ) => {
+        console.log( "Erreur genese" + recipientId );
+        console.error(
+          'Oops! An error forwarding the response to',
+          recipientId, ':', err.stack || err );
+      } );
+
+  },
+byebye( sessionId,context ) {
+    const recipientId = sessions[ sessionId ].fbid;
+    if ( recipientId ) {
+      var response = {
+        "text": "Je suis ravie d'avoi pu t'aider dans ta qu�te, j'esp�re maintenant que vous êtes incollable sur le sucre. Sachez que je suis mis �  jour r�guli�rement, n'hesistes pas �  revenir poser des questions ! � bient�t."
+      };
+      return fbMessage( recipientId, response ).then( () => {
+        console.log( "Send byebye sur " + recipientId );
+      } ).catch( ( err ) => {
+        console.log( "Erreur byebye" + recipientId );
+        console.error(
+          'Oops! An error occurred while forwarding the byebye to',
+          recipientId, ':', err.stack || err );
+      } );
+    } else {
+      console.error( 'Oops! Couldn\'t find user for session:', sessionId );
+      return Promise.resolve()
+    }
+  },
+insultes(entities,context,sessionId) {
+    const recipientId = sessions[ sessionId ].fbid;
+    var response2 = {
+    "text": "BOH BOH BOH !  !!",
+    "quick_replies": [
+      {
+        "content_type": "text",
+        "title": "Retourner �  l'accueil",
+        "payload": "RETOUR_ACCUEIL",
+        "image_url": "https://mon-chatbot.com/nutribot2018/images/back.png"
           },
-          {
-            "type": "element_share",
-            }],
-        }, ]
-      }
+      {
+        "content_type": "text",
+        "title": "Non merci !",
+        "payload": "ByeByeBye",
+        "image_url": "https://mon-chatbot.com/nutribot2018/images/exit.png"
+          }
+        ]
+    };
+    return fbMessage( recipientId, response2 ).then( () => {} )
+      .catch( ( err ) => {
+        console.log( "Erreur genese" + recipientId );
+        console.error(
+          'Oops! An error forwarding the response to',
+          recipientId, ':', err.stack || err );
+      } );
+
+  },
+	
+ reset_context( entities, context, sessionId ) {
+    console.log( "Je vais reset le context" + JSON.stringify( context ) );
+    return new Promise( function( resolve, reject ) {
+      context = {};
+      return resolve( context );
+    } );
+  }
+};
+// --------------------- CHOISIR LA PROCHAINE ACTION (LOGIQUE) EN FCT DES ENTITES OU INTENTIONS------------
+function choisir_prochaine_action( sessionId, context, entities ) {
+  // ACTION PAR DEFAUT CAR AUCUNE ENTITE DETECTEE
+  if(Object.keys(entities).length === 0 && entities.constructor === Object) {
+
+  }
+  // PAS DINTENTION DETECTEE
+  if(!entities.intent) {
+
+  }
+  // IL Y A UNE INTENTION DETECTION : DECOUVRONS LAQUELLE AVEC UN SWITCH
+  else {
+    switch ( entities.intent && entities.intent[ 0 ].value ) {
+		
+
+case "Dire_Bonjour":
+		actions.reset_context( entities, context, sessionId ).then(function() {
+      actions.getUserName( sessionId, context, entities ).then( function() {
+        actions.envoyer_message_text(sessionId, context, entities, "🎈").then(function() {  
+         actions.envoyer_message_text( sessionId, context, entities, 'Hey '+context.userName+"! Moi c'est NAT∑") .then(function() {
+         actions.envoyer_message_text(sessionId, context, entities, "Mon but c'est de consommer local et de t'inspirer sur notre riche région Occitanie tout en étant eco-responsables. Qui as dit que cela rythmer avec Has Been ? 😂").then(function() {
+           actions.envoyer_message_text(sessionId, context, entities, "Ce que je te propose : on tcharre de temps à autre sur mon défi Occitanie et je t'aide à t'inspirer ").then(function() {  
+		        actions.envoyer_message_text(sessionId, context, entities, "C'est partie 😎?");
+         // laisser le tribune libre pour la réponse ( intégrer du coup une case dire_ouiçava ou non j'ai pas le moral )
+                  })
+                })
+              })
+            })
+          }) 
+        })  
+        break;
+			
+	//case "Dire_oui_ça_vas"
+	// case "Dire_non-pas_la_motiv"
+        
+			
+			
+	case "Premier_Bonjour":
+		actions.envoyer_message_text( sessionId, context, entities, '🎉');
+		actions.envoyer_message_text( sessionId, context, entities, 'Hey '+context.userName+" ! Moi c'est Nat∑ 🤙 ! Je me suis lancer un challenge en Occitanie ").then(function() {
+        actions.envoyer_message_text( sessionId, context, entities, "Ce que je te propose on discute de temps �  autre d'un des divers sujets de mon challenge.Tout en exprimant mes resentit... Et si tu rejoignez mon challenge d'après Covid 19").then(function() {
+									 
+		// intégrer le quickreply c'est partie ? oui! Dis m'en plus? non !
+		})
+		})
+			
+        break;
+			
+	case "RETOUR_ACCUEIL":
+        // Revenir �  l'accueil et changer de texte
+        actions.reset_context( entities,context,sessionId ).then(function() {
+          actions.choixCategories_retour( sessionId,context );
+        })
+        break;
+			
+	case "Dire_Thanks":
+        actions.remerciements(entities,context,sessionId);
+        break;
+			
+	case "Repondre_injures":
+        actions.insultes(entities, context, sessionId).then(function() {
+		})
+        break;
+			
+	case "Dire_Aurevoir":
+        actions.byebye( sessionId,context ).then(function() {
+		})
+        break;
+			
+	case "GO_TO_MENU_DEMARRER":
+        actions.reset_context( entities,context,sessionId ).then(function() {
+          actions.choixCategories( sessionId,context );
+        })
+        break;
+			
+		// autres case ici au fil du temps 	
+			
+    };
+  }
+};
+
+// --------------------- FONCTION POUR AFFICHER LA METEO EN FCT DE LA LAT & LNG ------------
+
+// --------------------- LE SERVEUR WEB ------------
+const wit = new Wit( {
+  accessToken: WIT_TOKEN,
+  actions,
+  logger: new log.Logger( log.INFO )
+} );
+const app = express();
+app.use(( {
+    method,
+    url
+  }, rsp, next ) => {
+    rsp.on( 'finish', () => {
+      console.log( `${rsp.statusCode} ${method} ${url}` );
+    } );
+    next();
+});
+app.use( bodyParser.json( {
+  verify: verifyRequestSignature
+} ) );
+// ------------------------- LE WEBHOOK / hub.verify_token � CONFIGURER AVEC LE MEME MOT DE PASSE QUE FB_VERIFY_TOKEN ------------------------
+app.get( '/webhook', ( req, res ) => {
+  if ( req.query[ 'hub.mode' ] === 'subscribe' && req.query[
+      'hub.verify_token' ] === "Ppastaga51" ) { // remplir ici � la place de xxxx le meme mot de passe que FB_VERIFY_TOKEN
+    res.send( req.query[ 'hub.challenge' ] );
+  } else {
+    res.sendStatus( 400 );
+  }
+} );
+// ------------------------- LE WEBHOOK / GESTION DES EVENEMENTS ------------------------
+app.post( '/webhook', ( req, res ) => {
+  const data = req.body;
+  if ( data.object === 'page' ) {
+    data.entry.forEach( entry => {
+      entry.messaging.forEach( event => {
+        if ( event.message && !event.message.is_echo ) {
+          var sender = event.sender.id;
+          var sessionId = findOrCreateSession( sender );
+          var {
+            text,
+            attachments,
+            quick_reply
+          } = event.message;
+
+          function hasValue( obj, key ) {
+            return obj.hasOwnProperty( key );
+          }
+          console.log(JSON.stringify(event.message));
+          // -------------------------- MESSAGE IMAGE OU GEOLOCALISATION ----------------------------------
+          if (event.message.attachments != null  && typeof event.message.attachments[0] != 'undefined') {
+              // envoyer � Wit.ai ici
+            
+					}
+          // --------------------------- MESSAGE QUICK_REPLIES --------------------
+					else if ( hasValue( event.message, "text" ) && hasValue(event.message, "quick_reply" ) ) {
+            // envoyer � Wit.ai ici
+          
+          }
+          // ----------------------------- MESSAGE TEXT ---------------------------
+          else if ( hasValue( event.message, "text" ) ) {
+              // envoyer � Wit.ai ici
+              wit.message( text, sessions[ sessionId ].context )
+                .then( ( {
+                  entities
+                } ) => {
+                  choisir_prochaine_action( sessionId, sessions[
+                    sessionId ].context, entities );
+                  console.log( 'Yay, on a une response de Wit.ai : ' + JSON.stringify(
+                    entities ) );
+                } )
+                .catch( console.error );
+          }
+          // ----------------------------------------------------------------------------
+          else {
+              // envoyer � Wit.ai ici
+          }
+        }
+        // ----------------------------------------------------------------------------
+        else if ( event.postback && event.postback.payload ) {
+          var sender = event.sender.id;
+          var sessionId = findOrCreateSession( sender );
+            // envoyer � Wit.ai ici
+            
+
+          }
+        // ----------------------------------------------------------------------------
+        else {
+          console.log( 'received event : ', JSON.stringify( event ) );
+        }
+      } );
+    } );
+  }
+  res.sendStatus( 200 );
+} );
+// ----------------- VERIFICATION SIGNATURE -----------------------
+function verifyRequestSignature( req, res, buf ) {
+  var signature = req.headers[ "x-hub-signature" ];
+  if ( !signature ) {
+    console.error( "Couldn't validate the signature." );
+  } else {
+    var elements = signature.split( '=' );
+    var method = elements[ 0 ];
+    var signatureHash = elements[ 1 ];
+    var expectedHash = crypto.createHmac( 'sha1', FB_APP_SECRET ).update( buf )
+      .digest( 'hex' );
+    if ( signatureHash != expectedHash ) {
+      throw new Error( "Couldn't validate the request signature." );
     }
   }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
 }
-
-
-
-
-function share(sender) {
-  let messageData = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "RobotClope 🤖🚬",
-          "subtitle": "Merci de partager ❤❤ RobotClope le ChatBot qui te trouve des clopes 🚬🚬",
-          "image_url": "https://scontent-cdg2-1.xx.fbcdn.net/t31.0-8/14714985_960631460729826_5366735335003603455_o.jpg",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://m.me/960621237397515",
-            "title": "RobotClope 🤖🚬",
-          },
-          {
-            "type": "element_share",
-            }],
-        }, ]
-      }
-    }
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-
-function sendQuickReplyLoc(sender) {
-  let messageData = {
-    "text": "Haha, je t'ai eu !! Il me faut dans tout les cas ta géolocalisation 📍📍 pour que je te propose les tabacs à proximité",
-    "quick_replies": [{
-        "content_type": "location",
-      }]
-    }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-function sendQuickReplyHello(sender) {
-  let messageData = {
-    "text":"Bonjour je suis RobotClop,\n un petit 🤖 qui t'aide a trouver des 🚬🚬. \n \n  Pour commencer il suffit de m'envoyer ta géolocalisation. 📍📍 \n \n A tout moment tu peux tapper Menu pour retrouvez toutes les actions. 👍 PS : je suis un 👶🤖, je ne comprends pas encore tout ce que vous dites, merci de votre compréhension.",
-    "quick_replies":[
-      {
-        "content_type":"text",
-        "title":"Menu",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"location",
-        "title":"position",
-      }
-    ]
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-function sendQuickReplyAction(sender) {
-  let messageData = {
-    "text":"Choisis une action",
-    "quick_replies":[
-      {
-        "content_type":"location",
-        "title":"position",
-      },
-      {
-        "content_type":"text",
-        "title":"🖥 Version Web",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
-        "title":"❤ Aimez nous",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
-        "title":"📅 Ouvert le Dimanche",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
-        "title":"💬 Partagez",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
-        "title":"🤖 Copains Robots",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      },
-      {
-        "content_type":"text",
-        "title":"🚑 Arrêter de fumer",
-        "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_PICKING_RED",
-      }
-    ]
-  }
-  request({
-    url: 'https://graph.facebook.com/v2.6/me/messages',
-    qs: {access_token:token},
-    method: 'POST',
-    json: {
-      recipient: {id:sender},
-      message: messageData,
-    }
-  }, function(error, response, body) {
-    if (error) {
-      console.log('Error sending messages: ', error)
-    } else if (response.body.error) {
-      console.log('Error: ', response.body.error)
-    }
-  })
-}
-
-
-
-
-// spin spin sugar
-app.listen(app.get('port'), function() {
-  console.log('running on port', app.get('port'))
-})
+app.listen( PORT );
+console.log( 'Listening on :' + PORT + '...' );
